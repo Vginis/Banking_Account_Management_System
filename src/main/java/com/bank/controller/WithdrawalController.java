@@ -55,6 +55,9 @@ public class WithdrawalController {
         if(withdrawalRepository.existsById(withdrawalRepresentation.transactionId)){
             return new ResponseEntity<>("There is another withdrawal with that id", HttpStatus.BAD_REQUEST);
         }
+        if (withdrawalRepresentation.amount.compareTo(new BigDecimal(0))<=0|| withdrawalRepresentation.amount.compareTo(new BigDecimal(1000))>=0){
+            return new ResponseEntity<>("Invalid Amount to withdrawal", HttpStatus.BAD_REQUEST);
+        }
         try {
             Withdrawal withdrawal = withdrawalMapper.toModel(withdrawalRepresentation);
             withdrawalRepository.save(withdrawal);
@@ -69,6 +72,9 @@ public class WithdrawalController {
         if(transactionId ==null || withdrawalRepresentation==null){return new ResponseEntity<>("Deposit or id is null", HttpStatus.BAD_REQUEST);}
         if(!withdrawalRepository.existsById(transactionId)){
             return new ResponseEntity<>("No Withdrawal with that id", HttpStatus.NOT_FOUND);
+        }
+        if (withdrawalRepresentation.amount.compareTo(new BigDecimal(0))<=0|| withdrawalRepresentation.amount.compareTo(new BigDecimal(1000))>=0){
+            return new ResponseEntity<>("Invalid Amount to withdrawal", HttpStatus.BAD_REQUEST);
         }
         Withdrawal withdrawal1 = withdrawalRepository.getReferenceById(transactionId);
         Withdrawal withdrawal = withdrawalMapper.toModel(withdrawalRepresentation);
@@ -100,7 +106,9 @@ public class WithdrawalController {
         if(!accountRepository.existsById(account)){
             return new ResponseEntity<>("No Account with that id", HttpStatus.NOT_FOUND);
         }
-
+        if (amount.compareTo(new BigDecimal(0))<=0|| amount.compareTo(new BigDecimal(1000))>=0){
+            return new ResponseEntity<>("Invalid Amount to withdrawal", HttpStatus.BAD_REQUEST);
+        }
         Account account1 = accountRepository.getReferenceById(account);
         List<Integer> intList = new ArrayList<>();
         for (Withdrawal d: withdrawalRepository.findAll()){

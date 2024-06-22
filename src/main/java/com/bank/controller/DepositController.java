@@ -56,6 +56,9 @@ public class DepositController {
         if(depositRepository.existsById(depositRepresentation.transactionId)){
             return new ResponseEntity<>("There is another deposit with that id", HttpStatus.BAD_REQUEST);
         }
+        if(depositRepresentation.amount.compareTo(new BigDecimal(0))<=0){
+            return new ResponseEntity<>("Amount less than 0", HttpStatus.BAD_REQUEST);
+        }
         try {
             Deposit deposit = depositMapper.toModel(depositRepresentation);
             depositRepository.save(deposit);
@@ -70,6 +73,9 @@ public class DepositController {
         if(transactionId ==null || depositRepresentation==null){return new ResponseEntity<>("Deposit or id is null", HttpStatus.BAD_REQUEST);}
         if(!depositRepository.existsById(transactionId)){
             return new ResponseEntity<>("No Deposit with that id", HttpStatus.NOT_FOUND);
+        }
+        if(depositRepresentation.amount.compareTo(new BigDecimal(0))<=0 || depositRepresentation.amount.compareTo(new BigDecimal(1000))>=0){
+            return new ResponseEntity<>("Amount is less than 0", HttpStatus.BAD_REQUEST);
         }
         Deposit deposit1 = depositRepository.getReferenceById(transactionId);
         Deposit deposit = depositMapper.toModel(depositRepresentation);
@@ -101,7 +107,9 @@ public class DepositController {
         if(!accountRepository.existsById(account)){
             return new ResponseEntity<>("No Account with that id", HttpStatus.NOT_FOUND);
         }
-
+        if(amount.compareTo(new BigDecimal(0))<=0){
+            return new ResponseEntity<>("Amount is less than 0", HttpStatus.BAD_REQUEST);
+        }
         Account account1 = accountRepository.getReferenceById(account);
         List<Integer> intList = new ArrayList<>();
         for (Deposit d: depositRepository.findAll()){

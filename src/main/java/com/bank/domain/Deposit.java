@@ -19,6 +19,9 @@ public class Deposit extends Transaction{
 
     public boolean makeDeposit(BigDecimal amount, Account account){
         if (account==null || amount == null){return false;}
+        if (amount.compareTo(new BigDecimal(0))<= 0){
+            return false;
+        }
         BigDecimal currentAmount = account.getBalance().getAmount();
         BigDecimal newAmount = currentAmount.add(amount);
         account.setBalance(new Money(newAmount, Currency.EUR));

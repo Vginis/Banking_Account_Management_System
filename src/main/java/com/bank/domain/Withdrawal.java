@@ -24,6 +24,9 @@ public class Withdrawal extends Transaction{
 
     public boolean makeWithdrawal(BigDecimal amount, Account account) throws BadRequestException {
         if (account==null || amount == null){return false;}
+        if (amount.compareTo(new BigDecimal(0))<= 0 || amount.compareTo(new BigDecimal(1000))>= 0){
+            return false;
+        }
         if (account.getBalance().getAmount().compareTo(amount) < 0){
             throw new BadRequestException("You have insufficient funds");
         }

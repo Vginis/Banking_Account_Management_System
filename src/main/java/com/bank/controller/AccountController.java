@@ -195,6 +195,9 @@ public class AccountController {
     if(!accountRepository.existsById(from)){
         return new ResponseEntity<>("No Origin Account with that id", HttpStatus.NOT_FOUND);
         }
+    if(amount.compareTo(new BigDecimal(0))<=0){
+        return new ResponseEntity<>("Amount is 0 or less", HttpStatus.BAD_REQUEST);
+    }
     Account source = accountRepository.getReferenceById(from);
     Account destination = accountRepository.getReferenceById(to);
     try{

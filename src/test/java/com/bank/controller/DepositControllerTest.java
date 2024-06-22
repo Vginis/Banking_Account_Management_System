@@ -130,17 +130,20 @@ public class DepositControllerTest extends Initialization {
                 .statusCode(200).extract().as(AccountRepresentation.class);
         BigDecimal initial = new BigDecimal(accountRepresentation.balance);
         given().contentType(ContentType.JSON)
-                .when().put(DEPOSIT_URL +"/make/2?amount=5000").then().statusCode(204);
+                .when().put(DEPOSIT_URL +"/make/2?amount=500").then().statusCode(204);
         AccountRepresentation accountRepresentation2 = when().get(ACCOUNT_URL+"/2").then()
                 .statusCode(200).extract().as(AccountRepresentation.class);
-        assertEquals(initial.add(new BigDecimal(5000)),new BigDecimal(accountRepresentation2.balance));
+        assertEquals(initial.add(new BigDecimal(500)),new BigDecimal(accountRepresentation2.balance));
     }
 
     @Test
     public void makeInvalidDepositTest(){
         given().contentType(ContentType.JSON)
-                .when().put(DEPOSIT_URL +"/make/231?amount=5000")
+                .when().put(DEPOSIT_URL +"/make/231?amount=500")
                 .then().statusCode(404);
+        given().contentType(ContentType.JSON)
+                .when().put(DEPOSIT_URL +"/make/2?amount=0")
+                .then().statusCode(400);
     }
 
 }
