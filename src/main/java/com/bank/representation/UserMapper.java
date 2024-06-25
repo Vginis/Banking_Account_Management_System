@@ -25,6 +25,7 @@ public abstract class UserMapper {
     @Mapping(source = "firstName", target = "firstName")
     @Mapping(source = "email", target = "email")
     @Mapping(source = "lastName", target = "lastName")
+    @Mapping(source = "username", target="username")
     @Mapping(target = "address", ignore = true)
     @Mapping(target = "accountList", expression = "java(user.getAccountList().stream().map(com.bank.domain.Account::getAccountNumber).collect(Collectors.toList()))")
     public abstract UserRepresentation userToRepresentation(User user);
@@ -34,6 +35,7 @@ public abstract class UserMapper {
     @Mapping(source = "userId", target = "userId")
     @Mapping(source = "firstName", target = "firstName")
     @Mapping(source = "email", target = "email")
+    @Mapping(source = "username", target="username")
     @Mapping(source = "lastName", target = "lastName")
     @Mapping(target = "address", ignore = true)
     @Mapping(target = "accountList",ignore = true)
@@ -70,5 +72,10 @@ public abstract class UserMapper {
             accountList.add(account);
         }
         user.setAccountList(accountList);
+    }
+
+    @AfterMapping
+    public void resolvePassword(@MappingTarget User user){
+        user.setPassword("temporary");
     }
 }

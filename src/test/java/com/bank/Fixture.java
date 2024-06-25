@@ -68,6 +68,7 @@ public class Fixture extends Initialization{
         userRepresentation.userId = 1000;
         userRepresentation.address = "ApostolosNikolaidis 13 55555";
         userRepresentation.email = "fotio7@gmail.com";
+        userRepresentation.username = "fotio7";
         userRepresentation.firstName = "Fotis";
         userRepresentation.lastName = "Ioannidis";
         userRepresentation.accountList = new ArrayList<>();

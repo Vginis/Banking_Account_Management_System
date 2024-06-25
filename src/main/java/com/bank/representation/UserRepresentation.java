@@ -9,6 +9,7 @@ public class UserRepresentation {
     public Integer userId;
     public String firstName;
     public String lastName;
+    public String username;
     public String email;
     public String address;
     public List<Integer> accountList;

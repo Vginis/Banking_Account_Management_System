@@ -26,7 +26,7 @@ public class DepositControllerTest extends Initialization {
     public void findAllDepositTest(){
         List<DepositRepresentation> deposits = when().get(DEPOSIT_URL)
                 .then().statusCode(200).extract().as(new TypeRef<List<DepositRepresentation>>() {});
-        assertEquals(deposits.size(),2);
+        assertEquals(deposits.size(),4);
     }
 
     @Test

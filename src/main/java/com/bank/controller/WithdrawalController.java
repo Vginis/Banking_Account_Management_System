@@ -50,6 +50,18 @@ public class WithdrawalController {
         return new ResponseEntity<>(withdrawalMapper.toRepresentation(withdrawal), HttpStatus.OK);
     }
 
+    @GetMapping("withdrawals/account/{id}")
+    ResponseEntity<?> findWithdrawalsByAccount(@PathVariable Integer id){
+        if(id==null){
+            return new ResponseEntity<>("id is null", HttpStatus.BAD_REQUEST);
+        }
+        List<Withdrawal> withdrawals = withdrawalRepository.findDepositByAccountNumber(id);
+        if(withdrawals==null){
+            return new ResponseEntity<>("This account doesn't have deposits", HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(withdrawalMapper.toRepresentationList(withdrawals), HttpStatus.OK);
+    }
+
     @PostMapping(value = "/withdrawals/new", produces = MediaType.APPLICATION_JSON_VALUE,consumes = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<?> createNewWithdrawal(@RequestBody WithdrawalRepresentation withdrawalRepresentation) {
         if(withdrawalRepository.existsById(withdrawalRepresentation.transactionId)){

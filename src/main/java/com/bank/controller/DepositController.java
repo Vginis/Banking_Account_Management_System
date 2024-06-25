@@ -51,6 +51,18 @@ public class DepositController {
         return new ResponseEntity<>(depositMapper.toRepresentation(deposit), HttpStatus.OK);
     }
 
+    @GetMapping("deposits/account/{id}")
+    ResponseEntity<?> findDepositsByAccount(@PathVariable Integer id){
+        if(id==null){
+            return new ResponseEntity<>("id is null", HttpStatus.BAD_REQUEST);
+        }
+        List<Deposit> deposits = depositRepository.findDepositByAccountNumber(id);
+        if(deposits==null){
+            return new ResponseEntity<>("This account doesn't have deposits", HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(depositMapper.toRepresentationList(deposits), HttpStatus.OK);
+    }
+
     @PostMapping(value = "/deposits/new", produces = MediaType.APPLICATION_JSON_VALUE,consumes = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<?> createNewDeposit(@RequestBody DepositRepresentation depositRepresentation) {
         if(depositRepository.existsById(depositRepresentation.transactionId)){
