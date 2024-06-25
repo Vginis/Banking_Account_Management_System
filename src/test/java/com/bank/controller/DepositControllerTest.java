@@ -13,7 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.util.List;
 
-import static com.bank.util.Urls.*;
+import static com.bank.util.Urls.ACCOUNT_URL;
+import static com.bank.util.Urls.DEPOSIT_URL;
 import static io.restassured.RestAssured.given;
 import static io.restassured.RestAssured.when;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -21,129 +22,161 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @SpringBootTest
 public class DepositControllerTest extends Initialization {
 
-
     @Test
-    public void findAllDepositTest(){
-        List<DepositRepresentation> deposits = when().get(DEPOSIT_URL)
+    public void findAllDepositTest() {
+        List<DepositRepresentation> deposits = given().header("Authorization", "Bearer " + token)
+                .when().get(DEPOSIT_URL)
                 .then().statusCode(200).extract().as(new TypeRef<List<DepositRepresentation>>() {});
-        assertEquals(deposits.size(),4);
+        assertEquals(4, deposits.size());
     }
 
     @Test
-    public void findOneDepositTest()  {
-        DepositRepresentation depositRepresentation = when().get(DEPOSIT_URL + "/4").then()
-                .statusCode(200).extract().as(DepositRepresentation.class);
-        assertEquals(depositRepresentation.transactionId,4);
-        assertEquals(depositRepresentation.date, "2025-01-01 00:00:00");
+    public void findOneDepositTest() {
+        DepositRepresentation depositRepresentation = given().header("Authorization", "Bearer " + token)
+                .when().get(DEPOSIT_URL + "/4")
+                .then().statusCode(200).extract().as(DepositRepresentation.class);
+        assertEquals(4, depositRepresentation.transactionId);
+        assertEquals("2025-01-01 00:00:00", depositRepresentation.date);
     }
 
     @Test
-    public void findOneNullDepositTest(){
+    public void findOneNullDepositTest() {
         Integer transactionId = null;
-        when().get(DEPOSIT_URL + "/" +transactionId).then()
-                .statusCode(400);
+        given().header("Authorization", "Bearer " + token)
+                .when().get(DEPOSIT_URL + "/" + transactionId)
+                .then().statusCode(400);
     }
 
     @Test
-    public void findInvalidIdDepositTest(){
-        when().get(DEPOSIT_URL + "/88889").then()
-                .statusCode(404);
+    public void findInvalidIdDepositTest() {
+        given().header("Authorization", "Bearer " + token)
+                .when().get(DEPOSIT_URL + "/88889")
+                .then().statusCode(404);
     }
 
     @Test
-    public void createDepositTest(){
+    public void createDepositTest() {
         DepositRepresentation depositRepresentation = Fixture.fixture.createDepositRepresentation();
-        given().contentType(ContentType.JSON)
+        given().header("Authorization", "Bearer " + token)
+                .contentType(ContentType.JSON)
                 .body(depositRepresentation)
-                .when().post(DEPOSIT_URL +"/new").then().statusCode(201);
+                .when().post(DEPOSIT_URL + "/new")
+                .then().statusCode(201);
     }
 
     @Test
-    public void createInvalidDepositTest(){
-        DepositRepresentation depositRepresentation = when().get(DEPOSIT_URL+"/3").then()
-                .statusCode(200).extract().as(DepositRepresentation.class);
-        given().contentType(ContentType.JSON)
+    public void createInvalidDepositTest() {
+        DepositRepresentation depositRepresentation = given().header("Authorization", "Bearer " + token)
+                .when().get(DEPOSIT_URL + "/3")
+                .then().statusCode(200).extract().as(DepositRepresentation.class);
+        given().header("Authorization", "Bearer " + token)
+                .contentType(ContentType.JSON)
                 .body(depositRepresentation)
-                .when().post(DEPOSIT_URL +"/new").then().statusCode(400);
+                .when().post(DEPOSIT_URL + "/new")
+                .then().statusCode(400);
     }
+
     @Test
-    public void createWrongDepositTest(){
+    public void createWrongDepositTest() {
         DepositRepresentation depositRepresentation = new DepositRepresentation();
         depositRepresentation.transactionId = 12;
-        given().contentType(ContentType.JSON)
+        given().header("Authorization", "Bearer " + token)
+                .contentType(ContentType.JSON)
                 .body(depositRepresentation)
-                .when().post(DEPOSIT_URL +"/new").then().statusCode(500);
+                .when().post(DEPOSIT_URL + "/new")
+                .then().statusCode(500);
     }
 
     @Test
     @Transactional
-    public void updateDepositTest(){
-        DepositRepresentation depositRepresentation = when().get(DEPOSIT_URL+"/3").then()
-                .statusCode(200).extract().as(DepositRepresentation.class);
+    public void updateDepositTest() {
+        DepositRepresentation depositRepresentation = given().header("Authorization", "Bearer " + token)
+                .when().get(DEPOSIT_URL + "/3")
+                .then().statusCode(200).extract().as(DepositRepresentation.class);
 
         depositRepresentation.account = 2;
         depositRepresentation.date = "2029-01-01 00:00:00";
 
-        given().contentType(ContentType.JSON).body(depositRepresentation)
-                .when().put(DEPOSIT_URL + "/update/3").then().statusCode(204);
+        given().header("Authorization", "Bearer " + token)
+                .contentType(ContentType.JSON)
+                .body(depositRepresentation)
+                .when().put(DEPOSIT_URL + "/update/3")
+                .then().statusCode(204);
 
-        DepositRepresentation updated = when().get(DEPOSIT_URL + "/3").then().statusCode(200).extract()
-                .as(DepositRepresentation.class);
-        assertEquals("2029-01-01 00:00:00",updated.date);
-        assertEquals(2,updated.account);
+        DepositRepresentation updated = given().header("Authorization", "Bearer " + token)
+                .when().get(DEPOSIT_URL + "/3")
+                .then().statusCode(200).extract().as(DepositRepresentation.class);
+
+        assertEquals("2029-01-01 00:00:00", updated.date);
+        assertEquals(2, updated.account);
     }
 
     @Test
-    public void updateInvalidTest(){
+    public void updateInvalidTest() {
         Integer id = null;
-        given().contentType(ContentType.JSON).body(fixture.createDepositRepresentation())
-                .when().put(DEPOSIT_URL + "/update/" + id).then().statusCode(400);
+        given().header("Authorization", "Bearer " + token)
+                .contentType(ContentType.JSON)
+                .body(fixture.createDepositRepresentation())
+                .when().put(DEPOSIT_URL + "/update/" + id)
+                .then().statusCode(400);
 
-        given().contentType(ContentType.JSON).body(fixture.createDepositRepresentation())
-                .when().put(DEPOSIT_URL + "/update/212").then().statusCode(404);
+        given().header("Authorization", "Bearer " + token)
+                .contentType(ContentType.JSON)
+                .body(fixture.createDepositRepresentation())
+                .when().put(DEPOSIT_URL + "/update/212")
+                .then().statusCode(404);
     }
 
     @Test
     public void deleteDepositTest() {
-        given().contentType(ContentType.JSON)
-                .when().delete(DEPOSIT_URL + "/delete/3").then().statusCode(204);
+        given().header("Authorization", "Bearer " + token)
+                .contentType(ContentType.JSON)
+                .when().delete(DEPOSIT_URL + "/delete/3")
+                .then().statusCode(204);
 
-        given().when().get(DEPOSIT_URL +"/3").then().statusCode(404);
-    }
-
-    @Test
-    public void deleteDepositNullTest(){
-        Integer transactionId = null;
-        given().contentType(ContentType.JSON)
-                .when().delete(DEPOSIT_URL +"/delete/"+transactionId).then().statusCode(400);
-    }
-
-    @Test
-    public void deleteCardInvalidTest(){
-        given().contentType(ContentType.JSON)
-                .when().delete(DEPOSIT_URL +"/delete/56789013").then().statusCode(404);
-    }
-
-    @Test
-    public void makeDepositTest(){
-        AccountRepresentation accountRepresentation = when().get(ACCOUNT_URL+"/2").then()
-                .statusCode(200).extract().as(AccountRepresentation.class);
-        BigDecimal initial = new BigDecimal(accountRepresentation.balance);
-        given().contentType(ContentType.JSON)
-                .when().put(DEPOSIT_URL +"/make/2?amount=500").then().statusCode(204);
-        AccountRepresentation accountRepresentation2 = when().get(ACCOUNT_URL+"/2").then()
-                .statusCode(200).extract().as(AccountRepresentation.class);
-        assertEquals(initial.add(new BigDecimal(500)),new BigDecimal(accountRepresentation2.balance));
-    }
-
-    @Test
-    public void makeInvalidDepositTest(){
-        given().contentType(ContentType.JSON)
-                .when().put(DEPOSIT_URL +"/make/231?amount=500")
+        given().when().get(DEPOSIT_URL + "/3")
                 .then().statusCode(404);
-        given().contentType(ContentType.JSON)
-                .when().put(DEPOSIT_URL +"/make/2?amount=0")
+    }
+
+    @Test
+    public void deleteDepositNullTest() {
+        Integer transactionId = null;
+        given().header("Authorization", "Bearer " + token)
+                .contentType(ContentType.JSON)
+                .when().delete(DEPOSIT_URL + "/delete/" + transactionId)
                 .then().statusCode(400);
     }
 
+    @Test
+    public void deleteCardInvalidTest() {
+        given().header("Authorization", "Bearer " + token)
+                .contentType(ContentType.JSON)
+                .when().delete(DEPOSIT_URL + "/delete/56789013")
+                .then().statusCode(404);
+    }
+
+    @Test
+    public void makeDepositTest() {
+        AccountRepresentation accountRepresentation = given().header("Authorization", "Bearer " + token)
+                .when().get(ACCOUNT_URL + "/2")
+                .then().statusCode(200).extract().as(AccountRepresentation.class);
+        BigDecimal initial = new BigDecimal(accountRepresentation.balance);
+        given().header("Authorization", "Bearer " + token)
+                .when().put(DEPOSIT_URL + "/make/2?amount=500")
+                .then().statusCode(204);
+        AccountRepresentation accountRepresentation2 = given().header("Authorization", "Bearer " + token)
+                .when().get(ACCOUNT_URL + "/2")
+                .then().statusCode(200).extract().as(AccountRepresentation.class);
+        assertEquals(initial.add(new BigDecimal(500)), new BigDecimal(accountRepresentation2.balance));
+    }
+
+    @Test
+    public void makeInvalidDepositTest() {
+        given().header("Authorization", "Bearer " + token)
+                .when().put(DEPOSIT_URL + "/make/231?amount=500")
+                .then().statusCode(404);
+        given().header("Authorization", "Bearer " + token)
+                .when().put(DEPOSIT_URL + "/make/2?amount=0")
+                .then().statusCode(400);
+    }
 }

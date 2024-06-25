@@ -21,7 +21,7 @@ public class User {
     private String lastName;
     @Column(name="username",length = 20,nullable = false,unique = true)
     private String username;
-    @Column(name="password",length = 20,nullable = false)
+    @Column(name="password",length = 100,nullable = false)
     private String password;
     @Column(name="email",length = 20,nullable = false)
     private String email;

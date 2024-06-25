@@ -4,6 +4,9 @@ import com.bank.Fixture;
 import com.bank.domain.*;
 import com.bank.util.Money;
 import com.bank.util.Currency;
+import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
+import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 
@@ -15,9 +18,11 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import static com.bank.util.Currency.EUR;
+import static io.restassured.RestAssured.given;
 
 public abstract class Initialization {
 
+    protected static String token;
     protected static Fixture fixture;
     protected Account account;
     protected User user;
@@ -40,6 +45,9 @@ public abstract class Initialization {
 
     @BeforeEach
     public void setup() throws ParseException {
+        RestAssured.baseURI = "http://localhost:8094"; // Replace with your base URI
+        token = obtainAuthToken();
+
         money = new Money(new BigDecimal(45),EUR);
         address = new Address();
         address.setNumber("13");
@@ -74,5 +82,15 @@ public abstract class Initialization {
 
         user.setAccountList(accountList);
         account.setTransactionList(transactionList);
+    }
+
+    private static String obtainAuthToken() {
+        // Implement this method to obtain JWT token, e.g., via login endpoint
+        Response response = given()
+                .contentType(ContentType.JSON)
+                .body("{\"username\":\"djibril09\",\"password\":\"djibril09D!\"}")
+                .post("/auth/login");
+
+        return response.jsonPath().getString("token"); // Adjust based on your token structure
     }
 }

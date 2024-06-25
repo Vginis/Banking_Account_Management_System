@@ -7,6 +7,8 @@ import com.bank.repository.AccountRepository;
 import jakarta.inject.Inject;
 import org.apache.coyote.BadRequestException;
 import org.mapstruct.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,6 +22,9 @@ import java.util.stream.Collectors;
 public abstract class UserMapper {
     @Inject
     AccountRepository accountRepository;
+
+    @Autowired
+    private PasswordEncoder encoder;
 
     @Mapping(source = "userId", target = "userId")
     @Mapping(source = "firstName", target = "firstName")
@@ -76,6 +81,6 @@ public abstract class UserMapper {
 
     @AfterMapping
     public void resolvePassword(@MappingTarget User user){
-        user.setPassword("temporary");
+        user.setPassword(encoder.encode("temporary"));
     }
 }

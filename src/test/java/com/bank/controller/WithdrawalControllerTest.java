@@ -12,132 +12,170 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.math.BigDecimal;
 import java.util.List;
 
-import static com.bank.util.Urls.*;
+import static com.bank.util.Urls.ACCOUNT_URL;
+import static com.bank.util.Urls.WITHDRAWAL_URL;
 import static io.restassured.RestAssured.given;
 import static io.restassured.RestAssured.when;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 public class WithdrawalControllerTest extends Initialization {
+
     @Test
-    public void findAllWithdrawalTest(){
-        List<WithdrawalRepresentation> withdrawals = when().get(WITHDRAWAL_URL)
+    public void findAllWithdrawalTest() {
+        List<WithdrawalRepresentation> withdrawals = given().header("Authorization", "Bearer " + token)
+                .when().get(WITHDRAWAL_URL)
                 .then().statusCode(200).extract().as(new TypeRef<List<WithdrawalRepresentation>>() {});
-        assertEquals(withdrawals.size(),3);
+        assertEquals(3, withdrawals.size());
     }
 
     @Test
-    public void findOneWithdrawalTest()  {
-        WithdrawalRepresentation withdrawalRepresentation = when().get(WITHDRAWAL_URL + "/5").then()
-                .statusCode(200).extract().as(WithdrawalRepresentation.class);
-        assertEquals(withdrawalRepresentation.transactionId,5);
-        assertEquals(withdrawalRepresentation.date, "2024-01-01 00:00:00");
+    public void findOneWithdrawalTest() {
+        WithdrawalRepresentation withdrawalRepresentation = given().header("Authorization", "Bearer " + token)
+                .when().get(WITHDRAWAL_URL + "/5")
+                .then().statusCode(200).extract().as(WithdrawalRepresentation.class);
+        assertEquals(5, withdrawalRepresentation.transactionId);
+        assertEquals("2024-01-01 00:00:00", withdrawalRepresentation.date);
     }
 
     @Test
-    public void findOneNullWithdrawalTest(){
+    public void findOneNullWithdrawalTest() {
         Integer transactionId = null;
-        when().get(WITHDRAWAL_URL + "/" +transactionId).then()
-                .statusCode(400);
+        given().header("Authorization", "Bearer " + token)
+                .when().get(WITHDRAWAL_URL + "/" + transactionId)
+                .then().statusCode(400);
     }
 
     @Test
-    public void findInvalidIdWithdrawalTest(){
-        when().get(WITHDRAWAL_URL + "/88889").then()
-                .statusCode(404);
+    public void findInvalidIdWithdrawalTest() {
+        given().header("Authorization", "Bearer " + token)
+                .when().get(WITHDRAWAL_URL + "/88889")
+                .then().statusCode(404);
     }
 
     @Test
-    public void createWithdrawalTest(){
+    public void createWithdrawalTest() {
         WithdrawalRepresentation withdrawalRepresentation = Fixture.fixture.createWithdrawalRepresentation();
-        given().contentType(ContentType.JSON)
+        given().header("Authorization", "Bearer " + token)
+                .contentType(ContentType.JSON)
                 .body(withdrawalRepresentation)
-                .when().post(WITHDRAWAL_URL +"/new").then().statusCode(201);
+                .when().post(WITHDRAWAL_URL + "/new")
+                .then().statusCode(201);
     }
 
     @Test
-    public void createInvalidWithdrawalTest(){
-        WithdrawalRepresentation withdrawalRepresentation = when().get(WITHDRAWAL_URL+"/5").then()
-                .statusCode(200).extract().as(WithdrawalRepresentation.class);
-        given().contentType(ContentType.JSON)
+    public void createInvalidWithdrawalTest() {
+        WithdrawalRepresentation withdrawalRepresentation = given().header("Authorization", "Bearer " + token)
+                .when().get(WITHDRAWAL_URL + "/5")
+                .then().statusCode(200).extract().as(WithdrawalRepresentation.class);
+        given().header("Authorization", "Bearer " + token)
+                .contentType(ContentType.JSON)
                 .body(withdrawalRepresentation)
-                .when().post(WITHDRAWAL_URL +"/new").then().statusCode(400);
+                .when().post(WITHDRAWAL_URL + "/new")
+                .then().statusCode(400);
     }
+
     @Test
-    public void createWrongWithdrawalTest(){
+    public void createWrongWithdrawalTest() {
         WithdrawalRepresentation withdrawalRepresentation = new WithdrawalRepresentation();
         withdrawalRepresentation.transactionId = 12;
-        given().contentType(ContentType.JSON)
+        given().header("Authorization", "Bearer " + token)
+                .contentType(ContentType.JSON)
                 .body(withdrawalRepresentation)
-                .when().post(WITHDRAWAL_URL +"/new").then().statusCode(500);
+                .when().post(WITHDRAWAL_URL + "/new")
+                .then().statusCode(500);
     }
+
     @Test
-    public void updateWithdrawalTest(){
-        WithdrawalRepresentation withdrawalRepresentation = when().get(WITHDRAWAL_URL+"/5").then()
-                .statusCode(200).extract().as(WithdrawalRepresentation.class);
+    public void updateWithdrawalTest() {
+        WithdrawalRepresentation withdrawalRepresentation = given().header("Authorization", "Bearer " + token)
+                .when().get(WITHDRAWAL_URL + "/5")
+                .then().statusCode(200).extract().as(WithdrawalRepresentation.class);
 
         withdrawalRepresentation.account = 1;
         withdrawalRepresentation.date = "2029-01-01 00:00:00";
 
-        given().contentType(ContentType.JSON).body(withdrawalRepresentation)
-                .when().put(WITHDRAWAL_URL + "/update/5").then().statusCode(204);
+        given().header("Authorization", "Bearer " + token)
+                .contentType(ContentType.JSON)
+                .body(withdrawalRepresentation)
+                .when().put(WITHDRAWAL_URL + "/update/5")
+                .then().statusCode(204);
 
-        WithdrawalRepresentation updated = when().get(WITHDRAWAL_URL + "/5").then().statusCode(200).extract()
-                .as(WithdrawalRepresentation.class);
-        assertEquals("2029-01-01 00:00:00",updated.date);
-        assertEquals(1,updated.account);
+        WithdrawalRepresentation updated = given().header("Authorization", "Bearer " + token)
+                .when().get(WITHDRAWAL_URL + "/5")
+                .then().statusCode(200).extract().as(WithdrawalRepresentation.class);
+
+        assertEquals("2029-01-01 00:00:00", updated.date);
+        assertEquals(1, updated.account);
     }
 
     @Test
-    public void updateInvalidTest(){
+    public void updateInvalidTest() {
         Integer id = null;
-        given().contentType(ContentType.JSON).body(fixture.createWithdrawalRepresentation())
-                .when().put(WITHDRAWAL_URL + "/update/" + id).then().statusCode(400);
+        given().header("Authorization", "Bearer " + token)
+                .contentType(ContentType.JSON)
+                .body(fixture.createWithdrawalRepresentation())
+                .when().put(WITHDRAWAL_URL + "/update/" + id)
+                .then().statusCode(400);
 
-        given().contentType(ContentType.JSON).body(fixture.createDepositRepresentation())
-                .when().put(WITHDRAWAL_URL + "/update/212").then().statusCode(404);
+        given().header("Authorization", "Bearer " + token)
+                .contentType(ContentType.JSON)
+                .body(fixture.createWithdrawalRepresentation())
+                .when().put(WITHDRAWAL_URL + "/update/212")
+                .then().statusCode(404);
     }
 
     @Test
     public void deleteWithdrawalTest() {
-        given().contentType(ContentType.JSON)
-                .when().delete(WITHDRAWAL_URL + "/delete/6").then().statusCode(204);
+        given().header("Authorization", "Bearer " + token)
+                .contentType(ContentType.JSON)
+                .when().delete(WITHDRAWAL_URL + "/delete/6")
+                .then().statusCode(204);
 
-        given().when().get(WITHDRAWAL_URL +"/6").then().statusCode(404);
-    }
-
-    @Test
-    public void deleteWithdrawalNullTest(){
-        Integer transactionId = null;
-        given().contentType(ContentType.JSON)
-                .when().delete(WITHDRAWAL_URL +"/delete/"+transactionId).then().statusCode(400);
-    }
-
-    @Test
-    public void deleteCardInvalidTest(){
-        given().contentType(ContentType.JSON)
-                .when().delete(WITHDRAWAL_URL +"/delete/56789013").then().statusCode(404);
-    }
-
-    @Test
-    public void makeWithdrawalTest(){
-        AccountRepresentation accountRepresentation = when().get(ACCOUNT_URL+"/1").then()
-                .statusCode(200).extract().as(AccountRepresentation.class);
-        BigDecimal initial = new BigDecimal(accountRepresentation.balance);
-        given().contentType(ContentType.JSON)
-                .when().put(WITHDRAWAL_URL +"/make/1?amount=5").then().statusCode(204);
-        AccountRepresentation accountRepresentation2 = when().get(ACCOUNT_URL+"/1").then()
-                .statusCode(200).extract().as(AccountRepresentation.class);
-        assertEquals(initial.subtract(new BigDecimal(5)),new BigDecimal(accountRepresentation2.balance));
-    }
-
-    @Test
-    public void makeInvalidWithdrawalTest(){
-        given().contentType(ContentType.JSON)
-                .when().put(WITHDRAWAL_URL +"/make/231?amount=5")
+        given().when().get(WITHDRAWAL_URL + "/6")
                 .then().statusCode(404);
-        given().contentType(ContentType.JSON)
-                .when().put(WITHDRAWAL_URL +"/make/1?amount=500000")
+    }
+
+    @Test
+    public void deleteWithdrawalNullTest() {
+        Integer transactionId = null;
+        given().header("Authorization", "Bearer " + token)
+                .contentType(ContentType.JSON)
+                .when().delete(WITHDRAWAL_URL + "/delete/" + transactionId)
+                .then().statusCode(400);
+    }
+
+    @Test
+    public void deleteCardInvalidTest() {
+        given().header("Authorization", "Bearer " + token)
+                .contentType(ContentType.JSON)
+                .when().delete(WITHDRAWAL_URL + "/delete/56789013")
+                .then().statusCode(404);
+    }
+
+    @Test
+    public void makeWithdrawalTest() {
+        AccountRepresentation accountRepresentation = given().header("Authorization", "Bearer " + token)
+                .when().get(ACCOUNT_URL + "/1")
+                .then().statusCode(200).extract().as(AccountRepresentation.class);
+        BigDecimal initial = new BigDecimal(accountRepresentation.balance);
+        given().header("Authorization", "Bearer " + token)
+                .contentType(ContentType.JSON)
+                .when().put(WITHDRAWAL_URL + "/make/1?amount=5")
+                .then().statusCode(204);
+        AccountRepresentation accountRepresentation2 = given().header("Authorization", "Bearer " + token)
+                .when().get(ACCOUNT_URL + "/1")
+                .then().statusCode(200).extract().as(AccountRepresentation.class);
+        assertEquals(initial.subtract(new BigDecimal(5)), new BigDecimal(accountRepresentation2.balance));
+    }
+
+    @Test
+    public void makeInvalidWithdrawalTest() {
+        given().header("Authorization", "Bearer " + token)
+                .when().put(WITHDRAWAL_URL + "/make/231?amount=5")
+                .then().statusCode(404);
+        given().header("Authorization", "Bearer " + token)
+                .when().put(WITHDRAWAL_URL + "/make/1?amount=500000")
                 .then().statusCode(400);
     }
 }

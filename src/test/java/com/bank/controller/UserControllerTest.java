@@ -18,105 +18,135 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 public class UserControllerTest extends Initialization {
+
     @Test
-    public void findAllCard(){
-        List<UserRepresentation> users = when().get(USER_URL)
+    public void findAllCard() {
+        List<UserRepresentation> users = given().header("Authorization", "Bearer " + token)
+                .when().get(USER_URL)
                 .then().statusCode(200).extract().as(new TypeRef<List<UserRepresentation>>() {});
-        assertEquals(users.size(),3);
+        assertEquals(3, users.size());
     }
 
     @Test
-    public void findOneUserTest(){
-        UserRepresentation user = when().get(USER_URL + "/1").then()
-                .statusCode(200).extract().as(UserRepresentation.class);
-        assertEquals(user.userId,1);
-        assertEquals(user.lastName, "Cisse");
-        assertEquals(user.address,"Patission 3 12321");
+    public void findOneUserTest() {
+        UserRepresentation user = given().header("Authorization", "Bearer " + token)
+                .when().get(USER_URL + "/1")
+                .then().statusCode(200).extract().as(UserRepresentation.class);
+        assertEquals(1, user.userId);
+        assertEquals("Cisse", user.lastName);
+        assertEquals("Patission 3 12321", user.address);
     }
+
     @Test
-    public void findOneNullUserTest(){
+    public void findOneNullUserTest() {
         Integer userId = null;
-        when().get(USER_URL + "/" +userId).then()
-                .statusCode(400);
+        given().header("Authorization", "Bearer " + token)
+                .when().get(USER_URL + "/" + userId)
+                .then().statusCode(400);
     }
 
     @Test
-    public void findInvalidIdUSerTest(){
-        when().get(USER_URL + "/88889").then()
-                .statusCode(404);
+    public void findInvalidIdUserTest() {
+        given().header("Authorization", "Bearer " + token)
+                .when().get(USER_URL + "/88889")
+                .then().statusCode(404);
     }
 
     @Test
-    public void createUserTest(){
+    public void createUserTest() {
         UserRepresentation userRepresentation = fixture.createUserRepresentation();
-        given().contentType(ContentType.JSON)
+        given().header("Authorization", "Bearer " + token)
+                .contentType(ContentType.JSON)
                 .body(userRepresentation)
-                .when().post(USER_URL +"/new").then().statusCode(201);
+                .when().post(USER_URL + "/new")
+                .then().statusCode(201);
     }
 
     @Test
-    public void createInvalidAccountTest(){
-        UserRepresentation user = when().get(USER_URL + "/1").then()
+    public void createInvalidAccountTest() {
+        UserRepresentation user = given().header("Authorization", "Bearer " + token).get(USER_URL + "/1").then()
                 .statusCode(200).extract().as(UserRepresentation.class);
-        given().contentType(ContentType.JSON)
+        given().header("Authorization", "Bearer " + token)
+                .contentType(ContentType.JSON)
                 .body(user)
-                .when().post(USER_URL +"/new").then().statusCode(400);
+                .when().post(USER_URL + "/new")
+                .then().statusCode(400);
     }
+
     @Test
-    public void createWrongUserTest(){
+    public void createWrongUserTest() {
         UserRepresentation userRepresentation = new UserRepresentation();
         userRepresentation.userId = 4;
-        given().contentType(ContentType.JSON)
+        given().header("Authorization", "Bearer " + token)
+                .contentType(ContentType.JSON)
                 .body(userRepresentation)
-                .when().post(USER_URL +"/new").then().statusCode(500);
+                .when().post(USER_URL + "/new")
+                .then().statusCode(500);
     }
 
     @Test
     @Transactional
-    public void updateUserTest(){
-        UserRepresentation userRepresentation = when().get(USER_URL+"/3").then()
-                .statusCode(200).extract().as(UserRepresentation.class);
+    public void updateUserTest() {
+        UserRepresentation userRepresentation = given().header("Authorization", "Bearer " + token)
+                .when().get(USER_URL + "/3")
+                .then().statusCode(200).extract().as(UserRepresentation.class);
 
         userRepresentation.firstName = "Petros";
         userRepresentation.lastName = "Mantalos";
 
-        given().contentType(ContentType.JSON).body(userRepresentation)
-                .when().put(USER_URL + "/update/3").then().statusCode(204);
+        given().header("Authorization", "Bearer " + token)
+                .contentType(ContentType.JSON).body(userRepresentation)
+                .when().put(USER_URL + "/update/3")
+                .then().statusCode(204);
 
-        UserRepresentation updated = when().get(USER_URL + "/3").then().statusCode(200).extract()
-                .as(UserRepresentation.class);
-        assertEquals("Petros",updated.firstName);
-        assertEquals("Mantalos",updated.lastName);
+        UserRepresentation updated = given().header("Authorization", "Bearer " + token)
+                .when().get(USER_URL + "/3")
+                .then().statusCode(200).extract().as(UserRepresentation.class);
+        assertEquals("Petros", updated.firstName);
+        assertEquals("Mantalos", updated.lastName);
     }
 
     @Test
-    public void updateInvalidTest(){
+    public void updateInvalidTest() {
         Integer id = null;
-        given().contentType(ContentType.JSON).body(fixture.createUserRepresentation())
-                .when().put(USER_URL + "/update/" + id).then().statusCode(400);
+        given().header("Authorization", "Bearer " + token)
+                .contentType(ContentType.JSON).body(fixture.createUserRepresentation())
+                .when().put(USER_URL + "/update/" + id)
+                .then().statusCode(400);
 
-        given().contentType(ContentType.JSON).body(fixture.createAccountRepresentation())
-                .when().put(USER_URL + "/update/212").then().statusCode(404);
+        given().header("Authorization", "Bearer " + token)
+                .contentType(ContentType.JSON).body(fixture.createAccountRepresentation())
+                .when().put(USER_URL + "/update/212")
+                .then().statusCode(404);
     }
 
     @Test
     public void deleteUserTest() {
-        given().contentType(ContentType.JSON)
-                .when().delete(USER_URL + "/delete/3").then().statusCode(204);
+        given().header("Authorization", "Bearer " + token)
+                .contentType(ContentType.JSON)
+                .when().delete(USER_URL + "/delete/3")
+                .then().statusCode(204);
 
-        given().when().get(USER_URL +"/3").then().statusCode(404);
+        given().header("Authorization", "Bearer " + token)
+                .when().get(USER_URL + "/3")
+                .then().statusCode(404);
     }
 
     @Test
-    public void deleteUserNullTest(){
+    public void deleteUserNullTest() {
         Integer userId = null;
-        given().contentType(ContentType.JSON)
-                .when().delete(USER_URL +"/delete/"+userId).then().statusCode(400);
+        given().header("Authorization", "Bearer " + token)
+                .contentType(ContentType.JSON)
+                .when().delete(USER_URL + "/delete/" + userId)
+                .then().statusCode(400);
     }
 
     @Test
-    public void deleteCardInvalidTest(){
-        given().contentType(ContentType.JSON)
-                .when().delete(USER_URL +"/delete/56789013").then().statusCode(404);
+    public void deleteCardInvalidTest() {
+        given().header("Authorization", "Bearer " + token)
+                .contentType(ContentType.JSON)
+                .when().delete(USER_URL + "/delete/56789013")
+                .then().statusCode(404);
     }
 }
+

@@ -2,10 +2,10 @@
 --delete from money_transactions;
 --delete from users;
 --delete from accounts;
-
-insert into users(user_id,email,first_name,last_name,username,password,number,street,zip_code) values (1,'cisse09@gmail.com','Djibril','Cisse','djibril09','djibril09D!',3,'Patission','12321');
-insert into users(user_id,email,first_name,last_name,username,password,number,street,zip_code) values (2,'kennun@aueb.gr','Kendrick','Nunn','djibril091','djibril09D!',3,'Kifisias','12333');
-insert into users(user_id,email,first_name,last_name,username,password,number,street,zip_code) values (3,'kosloy@gmail.com','Kostas','Sloukas','djibril092','djibril09D!',3,'Vouliagmenis','12334');
+-- password: djibril09D!
+insert into users(user_id,email,first_name,last_name,username,password,number,street,zip_code) values (1,'cisse09@gmail.com','Djibril','Cisse','djibril09','$2a$10$FpDmrpQfzTFoZCBtH9F7Ye0zzFSPXm4Dtmo4Vg5jeocsggLemJese',3,'Patission','12321');
+insert into users(user_id,email,first_name,last_name,username,password,number,street,zip_code) values (2,'kennun@aueb.gr','Kendrick','Nunn','djibril091','$2a$10$FpDmrpQfzTFoZCBtH9F7Ye0zzFSPXm4Dtmo4Vg5jeocsggLemJese',3,'Kifisias','12333');
+insert into users(user_id,email,first_name,last_name,username,password,number,street,zip_code) values (3,'kosloy@gmail.com','Kostas','Sloukas','djibril092','$2a$10$FpDmrpQfzTFoZCBtH9F7Ye0zzFSPXm4Dtmo4Vg5jeocsggLemJese',3,'Vouliagmenis','12334');
 
 insert into accounts(account_number,user_id, amount, currency) values (1,1,45,'EUR');
 insert into accounts(account_number,user_id, amount, currency) values (2,2,4500000,'EUR');
