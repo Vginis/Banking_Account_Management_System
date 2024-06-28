@@ -1,0 +1,70 @@
+body{
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    background-color: lightcyan;
+}
+.context {
+    background-color: #f0f8ff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+    max-width: 750px;
+    height: 600px;
+    margin: 50px auto;
+    text-align: center; 
+}
+.context h1 {
+    text-align: left;
+    color: #333;
+    font-size: 2.5em;
+    margin: 10;
+  }
+
+.context button {
+    display: inline-block;
+    padding: 10px 20px;
+    margin: 10px;
+    font-size: 1em;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+.context button:hover {
+    background-color: #0056b3; 
+}
+.context p{
+    font-size: 2rem;
+    margin-top: 170px;
+    color: #333; 
+}
+
+.money-input{
+    font-size: 1.5em;
+    color: #333;
+    text-align: left;
+    margin-right: 300px;
+    display:flex;
+    padding-top: 20px;
+    text-align: left;
+}
+.money-input input{
+    margin-left: 10px;
+    padding-left: 10%;
+}
+.account-input{
+    font-size: 1.5em;
+    color: #333;
+    text-align: left;
+    margin-right: 300px;
+    display:flex;
+    padding-top: 20px;
+    text-align: left;
+}
+.account-input input{
+    margin-left: 10px;
+    padding-left: 10%;
+}

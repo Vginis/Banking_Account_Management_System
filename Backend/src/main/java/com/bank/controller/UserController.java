@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 @RestController
 public class UserController {
@@ -35,6 +36,18 @@ public class UserController {
             return new ResponseEntity<>("User doesn't exist", HttpStatus.NOT_FOUND);
         }
         User user = userRepository.getReferenceById(id);
+        return new ResponseEntity<>(userMapper.userToRepresentation(user), HttpStatus.OK);
+    }
+
+    @GetMapping("/users/name/{username}")
+    ResponseEntity<?> findUserByUsername(@PathVariable String username){
+        if(username==null){
+            return new ResponseEntity<>("id is null", HttpStatus.BAD_REQUEST);
+        }
+        User user = userRepository.findByName1(username);
+        if(user==null){
+            return new ResponseEntity<>("User doesn't exist", HttpStatus.NOT_FOUND);
+        }
         return new ResponseEntity<>(userMapper.userToRepresentation(user), HttpStatus.OK);
     }
 

@@ -1,0 +1,73 @@
+.forms {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.forms h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.forms label {
+    display: block;
+    font-weight: bold;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.forms select,
+.forms input {
+    width: calc(100% - 22px);
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
+    font-size: 16px;
+}
+
+.forms .required {
+    color: red;
+}
+
+.forms .payment-button,
+.forms .back-button {
+    display: inline-block;
+    width: calc(50% - 20px);
+    padding: 10px;
+    margin: 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    text-align: center;
+}
+
+.forms .payment-button {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.forms .payment-button:hover {
+    background-color: #45a049;
+}
+
+.forms .back-button {
+    background-color: #f44336;
+    color: white;
+}
+
+.forms .back-button:hover {
+    background-color: #e53935;
+}
+
+.forms .amount {
+    display: block;
+}
