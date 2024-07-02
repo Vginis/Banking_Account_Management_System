@@ -1,39 +1,12 @@
 import React,{useState,useEffect} from "react";
 import { useNavigate } from 'react-router-dom';
-import Endpoints from "../util/enums";
 import "../styling/Deposit.css";
 import {makeADeposit} from '../util/functionality.js';
-function Deposit({currentUser,token}){
+function Deposit({currentUser,token,accounts}){
     const [sourceAccount,setSourceAccount] = useState(null);
     const [amount,setAmount] = useState(0);
-    const [accounts,setAccounts] = useState([]);
     const navigate = useNavigate();
-    const [error, setError] = useState(null);
-
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const userResponse = await fetch(Endpoints.USER+`/name/${currentUser}`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-                if (!userResponse.ok) {
-                    throw new Error('Bank API response was not ok');
-                }
-                const userData = await userResponse.json()
-                const extractedAccounts = userData.accountList.map(element => element);
-                setAccounts(extractedAccounts);
-            } catch (error) {
-                setError(error);
-                console.error('There was a problem with the fetch operation:', error);
-            }
-        };
-        fetchData();
-    }, []);
-
+    
     async function makeDeposit(){
         await makeADeposit(sourceAccount,amount,token);
 

@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -80,7 +79,10 @@ public abstract class UserMapper {
     }
 
     @AfterMapping
-    public void resolvePassword(@MappingTarget User user){
-        user.setPassword(encoder.encode("temporary"));
+    public void resolvePassword(@MappingTarget User user) {
+        user.setPassword(encoder.encode("temporary123@T"));
     }
+
+    @AfterMapping
+    public void resolveIsAdmin(@MappingTarget User user){user.setAdmin(false);}
 }

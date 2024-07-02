@@ -13,4 +13,5 @@ public class UserRepresentation {
     public String email;
     public String address;
     public List<Integer> accountList;
+    public boolean isAdmin;
 }

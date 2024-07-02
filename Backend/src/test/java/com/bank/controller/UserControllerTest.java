@@ -58,7 +58,7 @@ public class UserControllerTest extends Initialization {
         given().header("Authorization", "Bearer " + token)
                 .contentType(ContentType.JSON)
                 .body(userRepresentation)
-                .when().post(USER_URL + "/new")
+                .when().post(USER_URL + "/new/passwEord123!")
                 .then().statusCode(201);
     }
 
@@ -69,7 +69,7 @@ public class UserControllerTest extends Initialization {
         given().header("Authorization", "Bearer " + token)
                 .contentType(ContentType.JSON)
                 .body(user)
-                .when().post(USER_URL + "/new")
+                .when().post(USER_URL + "/new/passWord123@")
                 .then().statusCode(400);
     }
 
@@ -80,7 +80,18 @@ public class UserControllerTest extends Initialization {
         given().header("Authorization", "Bearer " + token)
                 .contentType(ContentType.JSON)
                 .body(userRepresentation)
-                .when().post(USER_URL + "/new")
+                .when().post(USER_URL + "/new/passWord123@")
+                .then().statusCode(500);
+    }
+
+    @Test
+    public void createWrongPasswordUserTest() {
+        UserRepresentation userRepresentation = new UserRepresentation();
+        userRepresentation.userId = 4;
+        given().header("Authorization", "Bearer " + token)
+                .contentType(ContentType.JSON)
+                .body(userRepresentation)
+                .when().post(USER_URL + "/new/password")
                 .then().statusCode(500);
     }
 

@@ -3,10 +3,9 @@ import '../styling/Transfer.css';
 import Endpoints from '../util/enums';
 import { useNavigate } from 'react-router-dom';
 
-function Transfer({currentUser,token}){
+function Transfer({currentUser,token,accounts}){
   const [sourceAccount,setSourceAccount] = useState(0);
   const [destAccount,setDestAccount] = useState(0);
-  const [userAccounts, setUserAccounts] = useState([]);
   const [allAccounts, setAllAccounts] = useState([]);
   const [amount,setAmount] = useState(0);
   const [error, setError] = useState(null);
@@ -16,13 +15,6 @@ function Transfer({currentUser,token}){
   useEffect(() => {
     const fetchData = async () => {
         try {
-            const userResponse = await fetch(Endpoints.USER+`/name/${currentUser}`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                }
-            });
             const allResponse = await fetch(Endpoints.ACCOUNTS, {
               method: 'GET',
               headers: {
@@ -30,13 +22,9 @@ function Transfer({currentUser,token}){
                   'Authorization': `Bearer ${token}`
               }
           });
-            if (!userResponse.ok || !allResponse.ok) {
+            if (!allResponse.ok) {
                 throw new Error('Bank API response was not ok');
             }
-            const userData = await userResponse.json()
-            const extractedAccounts = userData.accountList.map(element => element);
-            setUserAccounts(extractedAccounts);
-
             const allData = await allResponse.json()
             const extractedAccounts2 = allData.map(element => element.accountNumber);
             
@@ -83,7 +71,7 @@ function Transfer({currentUser,token}){
             onChange={(e) => setSourceAccount(e.target.value)}
             required>
             <option value="sourceAccount">Select from your accounts...</option>
-            {userAccounts.map((account) => (
+            {accounts.map((account) => (
                 <option key={account} value={account}>
                     Account ID: {account}
                 </option>

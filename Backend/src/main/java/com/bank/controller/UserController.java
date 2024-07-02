@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -21,6 +22,8 @@ public class UserController {
     public UserRepository userRepository;
     @Autowired
     public UserMapper userMapper;
+    @Autowired
+    private PasswordEncoder encoder;
 
     @GetMapping("/users")
     public ResponseEntity<?> findAllAccounts() {
@@ -51,13 +54,18 @@ public class UserController {
         return new ResponseEntity<>(userMapper.userToRepresentation(user), HttpStatus.OK);
     }
 
-    @PostMapping(value = "/users/new", produces = MediaType.APPLICATION_JSON_VALUE,consumes = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<?> createNewUser(@RequestBody UserRepresentation userRepresentation) {
+    @PostMapping(value = "/users/new/{password}", produces = MediaType.APPLICATION_JSON_VALUE,consumes = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<?> createNewUser(@RequestBody UserRepresentation userRepresentation,@PathVariable String password) {
         if(userRepository.existsById(userRepresentation.userId)){
             return new ResponseEntity<>("There is another user with that id", HttpStatus.BAD_REQUEST);
         }
+        String regexPattern = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%&])[A-Za-z\\d!@#$%&]{8,20}$";
+        if (!password.matches(regexPattern)) {
+            return new ResponseEntity<>("Password is incompatiblie with our Password Policy!", HttpStatus.BAD_REQUEST);
+        }
         try {
             User user = userMapper.userRepresentationToModel(userRepresentation);
+            user.setPassword(encoder.encode(password));
             userRepository.save(user);
             return new ResponseEntity<>("User Created!", HttpStatus.CREATED);
         } catch (Exception p) {

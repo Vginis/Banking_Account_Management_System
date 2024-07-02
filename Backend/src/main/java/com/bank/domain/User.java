@@ -3,14 +3,17 @@ package com.bank.domain;
 import com.bank.util.Money;
 import jakarta.persistence.*;
 import org.apache.coyote.BadRequestException;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Entity
 @Table(name="users")
-public class User {
+public class User implements UserDetails {
     @Id
     @Column(name="user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,6 +33,8 @@ public class User {
 
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH}, mappedBy = "user")
     private List<Account> accountList;
+    @Column(name="isAdmin",nullable = false)
+    private boolean isAdmin;
 
     public User(Integer userId, String firstName, String lastName, String email, Address address, List<Account> accountList) {
         this.userId = userId;
@@ -38,6 +43,7 @@ public class User {
         this.email = email;
         this.address = address;
         this.accountList = accountList;
+        this.isAdmin = false;
     }
 
     public User() {
@@ -95,6 +101,7 @@ public class User {
         this.accountList = accountList;
     }
 
+    @Override
     public String getUsername() {
         return username;
     }
@@ -103,12 +110,51 @@ public class User {
         this.username = username;
     }
 
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
+
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        if(isAdmin){
+            return Collections.singleton(new SimpleGrantedAuthority("ROLE_ADMIN"));
+        } else {
+            return Collections.singleton(new SimpleGrantedAuthority("ROLE_USER"));
+        }
+    }
+    @Override
     public String getPassword() {
         return password;
     }
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public boolean isAdmin() {
+        return isAdmin;
+    }
+
+    public void setAdmin(boolean admin) {
+        isAdmin = admin;
     }
 
     public void addAccount(Integer accountNumber, User user, Money balance) throws BadRequestException {

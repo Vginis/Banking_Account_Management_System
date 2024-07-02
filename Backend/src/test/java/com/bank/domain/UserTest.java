@@ -22,7 +22,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @SpringBootTest
 public class UserTest extends Initialization {
 
-//todo integrate with initialization
     /*Getter-Setter tests*/
     @Test
     public void getUserIdTest(){assertEquals(user.getUserId(), 1000);}
@@ -76,6 +75,13 @@ public class UserTest extends Initialization {
         user.setAccountList(new ArrayList<>());
         assertEquals(0, user.getAccountList().size());
     }
+
+    @Test
+    public void setPasswordTest() throws BadRequestException {
+        user.setPassword("asd@DFEas12");
+        assertEquals(user.getPassword(),"asd@DFEas12");
+    }
+
 
     /*domain-logic tests*/
     @Test

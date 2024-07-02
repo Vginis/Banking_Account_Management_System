@@ -34,12 +34,12 @@ public class SecurityConfig {
     public UserDetailsService userDetailsService() {
         return new UserInfoService();
     }
-
+//todo na perioriso ta privs toy user
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests(auth -> auth.requestMatchers("/auth/login", "/auth/signup", "/users/new").permitAll())
-                .authorizeHttpRequests(auth -> auth.requestMatchers("/users/**").authenticated())
+                .authorizeHttpRequests(auth -> auth.requestMatchers("/auth/login", "/auth/signup", "/users/new/**").permitAll())
+                .authorizeHttpRequests(auth -> auth.requestMatchers("/users/**").hasAnyAuthority("ROLE_ADMIN","ROLE_USER"))
                 .authorizeHttpRequests(auth -> auth.requestMatchers("/accounts/**").authenticated())
                 .authorizeHttpRequests(auth -> auth.requestMatchers("/withdrawals/**").authenticated())
                 .authorizeHttpRequests(auth -> auth.requestMatchers("/deposits/**").authenticated())

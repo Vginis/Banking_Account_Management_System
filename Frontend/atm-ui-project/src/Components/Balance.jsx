@@ -1,37 +1,19 @@
 import React,{useState,useEffect} from 'react';
 import Endpoints from "../util/enums.js";
 import "../styling/Balance.css";
-function Balance({currentUser,token}){
-    const [accounts,setAccounts] = useState([]);
-    const [userData, setUser] = useState(null);
+function Balance({token,userData,accounts}){
     const [firstName, setFirstName] = useState(null);
     const [error, setError] = useState(null);
     const [accountBalances, setAccountBalances] = useState({});
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const userResponse = await fetch(Endpoints.USER+`/name/${currentUser}`,
-                    {
-                        method: 'GET',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${token}`
-                        }
-            });
-                if (!userResponse.ok) {
-                    throw new Error('Bank API response was not ok');
-                }
-
-                const userData = await userResponse.json();
-                setUser(userData);
-                const extractedAccounts = userData.accountList.map(element => element);
-                setAccounts(extractedAccounts);
                 setFirstName(userData.firstName);
-                const balancePromises = extractedAccounts.map(account => fetchBalances(account));
+                const balancePromises = accounts.map(account => fetchBalances(account));
                 const balances = await Promise.all(balancePromises);
                 
                 const accountBalanceMap = {};
-                extractedAccounts.forEach((account, index) => {
+                accounts.forEach((account, index) => {
                     accountBalanceMap[account] = balances[index];
                 });
 
@@ -42,7 +24,7 @@ function Balance({currentUser,token}){
             }
         };
         fetchData();
-    }, []);
+    }, [token, userData, accounts]);
 
     async function fetchBalances(account){
         try {

@@ -27,7 +27,7 @@ public class AuthController {
     private UserInfoService userInfoService;
 
     @PostMapping("/signup")
-    public String signUp(@RequestBody User user) {
+    public String signUp(@RequestBody User user){
         return userInfoService.addUser(user);
     }
 

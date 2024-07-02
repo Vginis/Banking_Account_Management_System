@@ -1,38 +1,11 @@
 import React,{useState,useEffect} from "react";
 import Endpoints from "../util/enums";
 import '../styling/Transactions.css';
-function TransactionHistory({currentUser,token}){
+function TransactionHistory({currentUser,token,accounts}){
 
     const [deposits, setDeposits] = useState([]);
     const [withdrawals, setWithdrawals] = useState([]);
     const [error, setError] = useState(null);
-    const [accountList,setAccountList] = useState([]);
-   
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const userResponse = await fetch(Endpoints.USER+`/name/${currentUser}`, {
-                  method: 'GET',
-                  headers: {
-                      'Content-Type': 'application/json',
-                      'Authorization': `Bearer ${token}`
-                  }
-              });
-                if (!userResponse.ok) {
-                    throw new Error('Bank API response was not ok');
-                }
-
-                const userData = await userResponse.json();
-    
-                const extractedAccounts = userData.accountList.map(element => element);
-                setAccountList(extractedAccounts);
-                } catch (error) {
-                setError(error);
-                console.error('There was a problem with the fetch operation:', error);
-            }
-        };
-        fetchData();
-    }, []);
 
 
     useEffect(() => {
@@ -40,15 +13,15 @@ function TransactionHistory({currentUser,token}){
             try {
                 const allDeposits = [];
                 const allWithdrawals = [];
-                for(let i in accountList){
-                    const response = await fetch(Endpoints.DEPOSITS+`/account/${accountList[i]}`, {
+                for(let i in accounts){
+                    const response = await fetch(Endpoints.DEPOSITS+`/account/${accounts[i]}`, {
                       method: 'GET',
                       headers: {
                           'Content-Type': 'application/json',
                           'Authorization': `Bearer ${token}`
                       }
                   });
-                    const response2 = await fetch(Endpoints.WITHDRAWALS+`/account/${accountList[i]}`, {
+                    const response2 = await fetch(Endpoints.WITHDRAWALS+`/account/${accounts[i]}`, {
                       method: 'GET',
                       headers: {
                           'Content-Type': 'application/json',
@@ -56,7 +29,7 @@ function TransactionHistory({currentUser,token}){
                       }
                   });
                     if (!response.ok || !response2.ok) {
-                        throw new Error(`Failed to fetch deposits or withdrawls for account ${accountList[i]}`);
+                        throw new Error(`Failed to fetch deposits or withdrawls for account ${accounts[i]}`);
                     }
                     const depositTransactions = await response.json();
                     allDeposits.push(...depositTransactions);
@@ -72,7 +45,7 @@ function TransactionHistory({currentUser,token}){
             }
         };
         fetchData();
-    }, [accountList]);
+    }, [accounts]);
 
     return(<div className="transaction-history">
         <h1>Transaction History</h1>
