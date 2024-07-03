@@ -26,10 +26,6 @@ public class AuthController {
     @Autowired
     private UserInfoService userInfoService;
 
-    @PostMapping("/signup")
-    public String signUp(@RequestBody User user){
-        return userInfoService.addUser(user);
-    }
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRepresentation request) throws AuthenticationException {

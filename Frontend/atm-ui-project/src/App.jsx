@@ -11,6 +11,7 @@ import Login from "./Components/Login";
 import PrivateRoute from "./Components/PrivateRoute";
 import Register from "./Components/Register";
 import Endpoints from "./util/enums";
+import ChangePassword from "./Components/ChangePassword";
 function App() {
   const token = localStorage.getItem('token');
   const [userData, setUser] = useState(null);
@@ -53,6 +54,7 @@ function App() {
         <Route path="/ui" element={<PrivateRoute><UserInterface userData={userData}/></PrivateRoute>} />
         <Route path="/balance" element={<PrivateRoute><Balance token={token} userData={userData} accounts={accounts}/></PrivateRoute>} />
         <Route path="/transferFunds" element={<PrivateRoute><Transfer currentUser={username} token={token} accounts={accounts}/></PrivateRoute>} />
+        <Route path="/changePassword" element={<PrivateRoute><ChangePassword userData={userData} token={token}/></PrivateRoute>} />
         <Route path="/deposit" element={<Deposit currentUser={username} token={token} accounts={accounts}/>} />
         <Route path="/withdrawal" element={<Withdrawal currentUser={username} token={token} accounts={accounts}/>} />
         <Route path="/transactions" element={<TransactionHistory currentUser={username} token={token} accounts={accounts}/>} />

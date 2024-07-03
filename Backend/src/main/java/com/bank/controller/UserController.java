@@ -3,6 +3,7 @@ package com.bank.controller;
 
 import com.bank.domain.User;
 import com.bank.repository.UserRepository;
+import com.bank.representation.ChangePasswordDTO;
 import com.bank.representation.UserMapper;
 import com.bank.representation.UserRepresentation;
 import org.apache.coyote.BadRequestException;
@@ -14,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Optional;
 
 @RestController
@@ -97,6 +99,26 @@ public class UserController {
         userRepository.save(user1);
 
         return new ResponseEntity<>("User Updated!", HttpStatus.NO_CONTENT);
+    }
+
+
+    @PutMapping("/users/changePassword")
+    public ResponseEntity<?> changePassword(@RequestBody ChangePasswordDTO changePasswordDTO){
+        User user = userRepository.findByName1(changePasswordDTO.username);
+        if(user==null){ return new ResponseEntity<>("No User with that username", HttpStatus.NOT_FOUND);}
+        if(!encoder.matches(changePasswordDTO.oldPassword,encoder.encode(changePasswordDTO.oldPassword))){
+            return new ResponseEntity<>("Wrong password.",HttpStatus.UNAUTHORIZED);
+        }
+        if(Objects.equals(changePasswordDTO.newPassword, changePasswordDTO.oldPassword)){
+            return new ResponseEntity<>("Bad Input. New Password can not be the same.",HttpStatus.UNAUTHORIZED);
+        }
+        String regexPattern = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%&])[A-Za-z\\d!@#$%&]{8,20}$";
+        if (!changePasswordDTO.newPassword.matches(regexPattern)) {
+            return new ResponseEntity<>("Password is incompatiblie with our Password Policy!", HttpStatus.BAD_REQUEST);
+        }
+        user.setPassword(encoder.encode(changePasswordDTO.newPassword));
+        userRepository.save(user);
+        return new ResponseEntity<>("Password Updated!", HttpStatus.NO_CONTENT);
     }
 
     @DeleteMapping(value = "/users/delete/{id}", produces = MediaType.APPLICATION_JSON_VALUE,consumes = MediaType.APPLICATION_JSON_VALUE)

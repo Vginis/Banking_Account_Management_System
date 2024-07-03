@@ -28,6 +28,7 @@ function UserInterface({userData}) {
             <button onClick={() => {navigate('/deposit')}}>Deposit</button>
             <button onClick={() => {navigate('/transferFunds')}}>Transfer to other Account</button>
             <button onClick={() => {navigate('/transactions')}}>Show Transaction History</button>
+            <button onClick={() => {navigate('/changePassword')}}>Change Password</button>
             <button onClick={handleLogout}> Logout</button><br></br>
         </div>
     );
