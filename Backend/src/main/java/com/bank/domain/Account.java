@@ -22,7 +22,7 @@ public class Account {
     @JoinColumn(name="user_id")
     private User user;
 
-    @org.hibernate.annotations.Type(value=com.bank.repository.MoneyCustomType.class)
+    //@org.hibernate.annotations.Type(value=com.bank.repository.MoneyCustomType.class)
     @Column(name="balance",nullable = false)
     private Money balance;
 

@@ -106,7 +106,8 @@ public class UserController {
     public ResponseEntity<?> changePassword(@RequestBody ChangePasswordDTO changePasswordDTO){
         User user = userRepository.findByName1(changePasswordDTO.username);
         if(user==null){ return new ResponseEntity<>("No User with that username", HttpStatus.NOT_FOUND);}
-        if(!encoder.matches(changePasswordDTO.oldPassword,encoder.encode(changePasswordDTO.oldPassword))){
+        if(!encoder.matches(changePasswordDTO.oldPassword, user.getPassword())){
+            System.out.println(user.getPassword());
             return new ResponseEntity<>("Wrong password.",HttpStatus.UNAUTHORIZED);
         }
         if(Objects.equals(changePasswordDTO.newPassword, changePasswordDTO.oldPassword)){

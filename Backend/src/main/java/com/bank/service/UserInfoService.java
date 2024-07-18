@@ -31,12 +31,4 @@ public class UserInfoService implements UserDetailsService {
                 user.getAuthorities()
         );
     }
-
-    public String addUser(User userInfo) {
-        userInfo.setPassword(encoder.encode(userInfo.getPassword()));
-        repository.save(userInfo);
-        return "User Added Successfully";
-    }
-
-
 }

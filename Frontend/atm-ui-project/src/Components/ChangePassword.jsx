@@ -4,6 +4,7 @@ function ChangePassword({userData,token}){
     const [oldpassword,setOldPassword] = useState('');
     const [newpassword,setNewPassword] = useState('');
     const [error,setError] = useState(null);
+    const [passworderror,setPasswordError] = useState(null);
     function handleOldPasswordChange(e){
         setOldPassword(e.target.value);
     }
@@ -57,12 +58,12 @@ function ChangePassword({userData,token}){
     return(<div>
         <h1>Change Your Password</h1>
 
-        <label htmlFor="newPassword">Old Password</label>
-        <input type="text" id="newPassword" name="newPassword" value={newpassword} onChange={(e) => handleNewPasswordChange(e)} /><br></br>
-
-        <label htmlFor="oldpassword">New Password</label>
+        <label htmlFor="oldpassword">Old Password</label>
         <input type="text" id="oldpassword" name="oldpassword" value={oldpassword} onChange={(e) => handleOldPasswordChange(e)}/><br></br>
 
+        <label htmlFor="newPassword">New Password</label>
+        <input type="text" id="newPassword" name="newPassword" value={newpassword} onChange={(e) => handleNewPasswordChange(e)} /><br></br>
+        
         <p>Submit or Reset</p>
         <button className="button-71" onClick={handleReset}>Reset</button>
         <button className="button-71" onClick={handleSubmit}>Submit</button><br></br>
