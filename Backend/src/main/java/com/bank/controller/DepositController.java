@@ -4,7 +4,7 @@ import com.bank.domain.Account;
 import com.bank.domain.Deposit;
 import com.bank.repository.AccountRepository;
 import com.bank.repository.DepositRepository;
-import com.bank.representation.DepositMapper;
+import com.bank.mapper.DepositMapper;
 import com.bank.representation.DepositRepresentation;
 import com.bank.domain.Money;
 import org.springframework.beans.factory.annotation.Autowired;

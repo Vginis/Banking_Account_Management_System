@@ -1,8 +1,8 @@
 package com.bank.representation;
 
-import com.bank.Fixture;
 import com.bank.Initialization;
 import com.bank.domain.User;
+import com.bank.mapper.UserMapper;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import org.apache.coyote.BadRequestException;

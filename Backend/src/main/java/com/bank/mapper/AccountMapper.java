@@ -1,4 +1,4 @@
-package com.bank.representation;
+package com.bank.mapper;
 
 import com.bank.domain.Account;
 import com.bank.domain.Card;
@@ -7,6 +7,7 @@ import com.bank.domain.User;
 import com.bank.repository.CardRepository;
 import com.bank.repository.TransactionRepository;
 import com.bank.repository.UserRepository;
+import com.bank.representation.AccountRepresentation;
 import com.bank.util.Currency;
 import com.bank.domain.Money;
 import jakarta.inject.Inject;
@@ -20,7 +21,7 @@ import java.util.stream.Collectors;
 @Mapper(componentModel = "jakarta",
         injectionStrategy = InjectionStrategy.CONSTRUCTOR,
         imports = {Collectors.class},
-        uses = {CardMapper.class,DepositMapper.class, WithdrawalMapper.class})
+        uses = {CardMapper.class, DepositMapper.class, WithdrawalMapper.class})
 public abstract class AccountMapper {
     @Inject
     UserRepository userRepository;

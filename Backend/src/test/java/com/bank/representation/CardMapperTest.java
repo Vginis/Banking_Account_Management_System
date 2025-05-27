@@ -3,13 +3,12 @@ package com.bank.representation;
 import com.bank.Initialization;
 import com.bank.domain.Card;
 import com.bank.Fixture;
+import com.bank.mapper.CardMapper;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import java.text.ParseException;
-import java.util.Calendar;
-import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

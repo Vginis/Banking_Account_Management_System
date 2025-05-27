@@ -1,8 +1,9 @@
-package com.bank.representation;
+package com.bank.mapper;
 
 import com.bank.domain.Account;
 import com.bank.domain.Withdrawal;
 import com.bank.repository.AccountRepository;
+import com.bank.representation.WithdrawalRepresentation;
 import com.bank.util.Currency;
 import com.bank.domain.Money;
 import jakarta.inject.Inject;

@@ -4,7 +4,7 @@ import com.bank.domain.Account;
 import com.bank.domain.Card;
 import com.bank.repository.AccountRepository;
 import com.bank.repository.CardRepository;
-import com.bank.representation.AccountMapper;
+import com.bank.mapper.AccountMapper;
 import com.bank.representation.AccountRepresentation;
 import com.bank.util.Currency;
 import com.bank.domain.Money;

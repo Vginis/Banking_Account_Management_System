@@ -4,7 +4,7 @@ package com.bank.controller;
 import com.bank.domain.User;
 import com.bank.repository.UserRepository;
 import com.bank.representation.ChangePasswordDTO;
-import com.bank.representation.UserMapper;
+import com.bank.mapper.UserMapper;
 import com.bank.representation.UserRepresentation;
 import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.Objects;
-import java.util.Optional;
 
 @RestController
 public class UserController {

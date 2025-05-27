@@ -3,7 +3,7 @@ package com.bank.controller;
 import com.bank.domain.Card;
 import com.bank.repository.AccountRepository;
 import com.bank.repository.CardRepository;
-import com.bank.representation.CardMapper;
+import com.bank.mapper.CardMapper;
 import com.bank.representation.CardRepresentation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

@@ -2,6 +2,7 @@ package com.bank.representation;
 
 import com.bank.Initialization;
 import com.bank.domain.Deposit;
+import com.bank.mapper.DepositMapper;
 import jakarta.inject.Inject;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

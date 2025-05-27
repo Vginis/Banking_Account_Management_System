@@ -1,9 +1,10 @@
-package com.bank.representation;
+package com.bank.mapper;
 
 import com.bank.domain.Account;
 import com.bank.domain.Address;
 import com.bank.domain.User;
 import com.bank.repository.AccountRepository;
+import com.bank.representation.UserRepresentation;
 import jakarta.inject.Inject;
 import org.apache.coyote.BadRequestException;
 import org.mapstruct.*;

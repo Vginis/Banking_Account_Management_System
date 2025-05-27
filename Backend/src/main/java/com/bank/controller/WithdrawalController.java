@@ -4,7 +4,7 @@ import com.bank.domain.Account;
 import com.bank.domain.Withdrawal;
 import com.bank.repository.AccountRepository;
 import com.bank.repository.WithdrawalRepository;
-import com.bank.representation.WithdrawalMapper;
+import com.bank.mapper.WithdrawalMapper;
 import com.bank.representation.WithdrawalRepresentation;
 import com.bank.domain.Money;
 import org.apache.coyote.BadRequestException;

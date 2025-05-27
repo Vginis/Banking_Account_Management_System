@@ -5,6 +5,7 @@ import com.bank.Initialization;
 import com.bank.domain.Account;
 import com.bank.domain.Address;
 import com.bank.domain.User;
+import com.bank.mapper.AccountMapper;
 import com.bank.util.Currency;
 import com.bank.domain.Money;
 import jakarta.inject.Inject;
