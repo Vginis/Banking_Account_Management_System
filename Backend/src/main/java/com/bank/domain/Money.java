@@ -1,5 +1,6 @@
-package com.bank.util;
+package com.bank.domain;
 
+import com.bank.util.Currency;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.EnumType;

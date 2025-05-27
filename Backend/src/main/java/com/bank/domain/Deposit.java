@@ -1,12 +1,11 @@
 package com.bank.domain;
 
 import com.bank.util.Currency;
-import com.bank.util.Money;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Calendar;
+
 @Entity
 @DiscriminatorValue("DEPOSIT")
 public class Deposit extends Transaction{

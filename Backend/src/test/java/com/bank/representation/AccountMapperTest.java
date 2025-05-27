@@ -5,9 +5,8 @@ import com.bank.Initialization;
 import com.bank.domain.Account;
 import com.bank.domain.Address;
 import com.bank.domain.User;
-import com.bank.repository.AccountRepository;
 import com.bank.util.Currency;
-import com.bank.util.Money;
+import com.bank.domain.Money;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
@@ -15,7 +14,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

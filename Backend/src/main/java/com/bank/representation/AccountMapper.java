@@ -8,7 +8,7 @@ import com.bank.repository.CardRepository;
 import com.bank.repository.TransactionRepository;
 import com.bank.repository.UserRepository;
 import com.bank.util.Currency;
-import com.bank.util.Money;
+import com.bank.domain.Money;
 import jakarta.inject.Inject;
 import org.mapstruct.*;
 

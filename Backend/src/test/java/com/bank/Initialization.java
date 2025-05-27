@@ -1,9 +1,7 @@
 package com.bank;
 
-import com.bank.Fixture;
 import com.bank.domain.*;
-import com.bank.util.Money;
-import com.bank.util.Currency;
+import com.bank.domain.Money;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
@@ -12,7 +10,6 @@ import org.junit.jupiter.api.BeforeEach;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;

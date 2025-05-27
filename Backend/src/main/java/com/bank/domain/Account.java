@@ -1,7 +1,6 @@
 package com.bank.domain;
 
 import com.bank.util.Currency;
-import com.bank.util.Money;
 import jakarta.persistence.*;
 import org.apache.coyote.BadRequestException;
 
@@ -22,7 +21,6 @@ public class Account {
     @JoinColumn(name="user_id")
     private User user;
 
-    //@org.hibernate.annotations.Type(value=com.bank.repository.MoneyCustomType.class)
     @Column(name="balance",nullable = false)
     private Money balance;
 

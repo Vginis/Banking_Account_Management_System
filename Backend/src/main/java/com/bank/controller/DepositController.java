@@ -6,8 +6,7 @@ import com.bank.repository.AccountRepository;
 import com.bank.repository.DepositRepository;
 import com.bank.representation.DepositMapper;
 import com.bank.representation.DepositRepresentation;
-import com.bank.util.Currency;
-import com.bank.util.Money;
+import com.bank.domain.Money;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -17,8 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 

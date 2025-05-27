@@ -1,13 +1,12 @@
 package com.bank.controller;
 
 import com.bank.domain.Account;
-import com.bank.domain.Deposit;
 import com.bank.domain.Withdrawal;
 import com.bank.repository.AccountRepository;
 import com.bank.repository.WithdrawalRepository;
 import com.bank.representation.WithdrawalMapper;
 import com.bank.representation.WithdrawalRepresentation;
-import com.bank.util.Money;
+import com.bank.domain.Money;
 import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

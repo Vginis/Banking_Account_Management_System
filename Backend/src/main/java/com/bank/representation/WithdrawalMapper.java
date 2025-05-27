@@ -1,20 +1,15 @@
 package com.bank.representation;
 
 import com.bank.domain.Account;
-import com.bank.domain.Deposit;
 import com.bank.domain.Withdrawal;
 import com.bank.repository.AccountRepository;
 import com.bank.util.Currency;
-import com.bank.util.Money;
+import com.bank.domain.Money;
 import jakarta.inject.Inject;
 import org.mapstruct.*;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 

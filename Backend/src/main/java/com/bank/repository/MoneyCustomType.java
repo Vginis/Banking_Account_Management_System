@@ -1,7 +1,7 @@
 package com.bank.repository;
 
 
-import com.bank.util.Money;
+import com.bank.domain.Money;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.usertype.UserType;
 

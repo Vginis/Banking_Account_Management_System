@@ -1,6 +1,5 @@
 package com.bank.domain;
 
-import com.bank.util.Money;
 import jakarta.persistence.*;
 
 

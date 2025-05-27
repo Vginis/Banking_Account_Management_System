@@ -1,6 +1,5 @@
 package com.bank.domain;
 
-import com.bank.util.Money;
 import jakarta.persistence.*;
 import org.apache.coyote.BadRequestException;
 import org.springframework.security.core.GrantedAuthority;
@@ -8,8 +7,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Entity
 @Table(name="users")

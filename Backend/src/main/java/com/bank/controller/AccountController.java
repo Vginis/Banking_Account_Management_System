@@ -7,7 +7,7 @@ import com.bank.repository.CardRepository;
 import com.bank.representation.AccountMapper;
 import com.bank.representation.AccountRepresentation;
 import com.bank.util.Currency;
-import com.bank.util.Money;
+import com.bank.domain.Money;
 import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

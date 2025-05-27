@@ -1,13 +1,11 @@
 package com.bank.domain;
 
-import com.bank.util.Money;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import org.apache.coyote.BadRequestException;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Calendar;
 
 import static com.bank.util.Currency.EUR;
 
