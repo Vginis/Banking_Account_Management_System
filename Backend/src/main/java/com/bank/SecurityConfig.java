@@ -2,10 +2,10 @@ package com.bank;
 
 import com.bank.service.JwtAuthFilter;
 import com.bank.service.UserInfoService;
-import com.mysql.cj.protocol.AuthenticationProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -13,8 +13,6 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-
-
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -34,17 +32,24 @@ public class SecurityConfig {
     public UserDetailsService userDetailsService() {
         return new UserInfoService();
     }
-//todo na perioriso ta privs toy user
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests(auth -> auth.requestMatchers("/auth/login", "/users/new/**").permitAll())
-                .authorizeHttpRequests(auth -> auth.requestMatchers("/users/**").hasAnyAuthority("ROLE_ADMIN","ROLE_USER"))
+                .authorizeHttpRequests(auth -> auth.requestMatchers("/auth/login", "/users/new/**","/error").permitAll())
+                .authorizeHttpRequests(auth -> auth.requestMatchers("/users/**").authenticated())
                 .authorizeHttpRequests(auth -> auth.requestMatchers("/accounts/**").authenticated())
                 .authorizeHttpRequests(auth -> auth.requestMatchers("/withdrawals/**").authenticated())
                 .authorizeHttpRequests(auth -> auth.requestMatchers("/deposits/**").authenticated())
                 .authorizeHttpRequests(auth -> auth.requestMatchers("/cards/**").authenticated())
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .exceptionHandling(ex -> ex
+                    .accessDeniedHandler((request, response, accessDeniedException) -> {
+                        response.setStatus(HttpStatus.FORBIDDEN.value());
+                        response.setContentType("application/json");
+                        response.getWriter().write("{\"status\":403,\"message\":\"Access denied\"}");
+                    })
+                )
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
