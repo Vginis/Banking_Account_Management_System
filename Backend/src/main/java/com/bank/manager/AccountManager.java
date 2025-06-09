@@ -87,4 +87,23 @@ public class AccountManager {
 
         accountRepository.deleteById(accountNumber);
     }
+
+    public void transferFunds(Integer fromAccount, Integer toAccount, Long amount){
+        Optional<Account> sourceAccountOptional = accountRepository.findById(fromAccount);
+        Optional<Account> destinationAccountOptional = accountRepository.findById(toAccount);
+        if(sourceAccountOptional.isEmpty() || destinationAccountOptional.isEmpty()){
+            throw new EntityNotFoundException(ErrorMessages.ENTITY_NOT_FOUND);
+        }
+
+        Account sourceAccount = sourceAccountOptional.get();
+        Account destAccount = destinationAccountOptional.get();
+        BigDecimal amountDec = new BigDecimal(amount);
+        if(sourceAccount.getBalance().getAmount().compareTo(amountDec)<0){
+            throw new IllegalArgumentException(ErrorMessages.INSUFFICIENT_FUNDS);
+        }
+
+        sourceAccount.transferFunds(destAccount, new Money(amountDec, Currency.EUR));
+        accountRepository.save(sourceAccount);
+        accountRepository.save(destAccount);
+    }
 }

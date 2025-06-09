@@ -8,4 +8,6 @@ public class SuccessMessages {
     public static String CARD_CREATION = "card_created";
     public static String CARD_UPDATED = "card_updated";
     public static String CARD_DELETED = "card_deleted";
+
+    public static String TRANSFER_MADE_SUCCESSFULLY = "transfer_made_successfully";
 }

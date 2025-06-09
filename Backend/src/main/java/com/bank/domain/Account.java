@@ -144,16 +144,10 @@ public class Account {
         throw new RuntimeException("Card not found");
     }
 
-    public void transferFunds(Account to, Money money ) throws BadRequestException {
-        if(to==null || money==null){
-            throw new BadRequestException("Don't send null values");
-        }
-        if(this.getBalance().getAmount().compareTo(money.getAmount())<0){
-            throw new BadRequestException("Insufficient Funds");
-        }
+    public void transferFunds(Account destinationAccount, Money money ) {
         BigDecimal initial1 = this.getBalance().getAmount();
-        BigDecimal initial2 = to.getBalance().getAmount();
+        BigDecimal initial2 = destinationAccount.getBalance().getAmount();
         this.setBalance(new Money(initial1.subtract(money.getAmount()), Currency.EUR));
-        to.setBalance(new Money(initial2.add(money.getAmount()), Currency.EUR));
+        destinationAccount.setBalance(new Money(initial2.add(money.getAmount()), Currency.EUR));
     }
 }
