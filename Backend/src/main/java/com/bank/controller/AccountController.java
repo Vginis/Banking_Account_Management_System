@@ -1,13 +1,18 @@
 package com.bank.controller;
 
+import com.bank.constant.SuccessMessages;
 import com.bank.domain.Account;
 import com.bank.domain.Card;
+import com.bank.domain.Money;
+import com.bank.manager.AccountManager;
+import com.bank.mapper.AccountMapper;
 import com.bank.repository.AccountRepository;
 import com.bank.repository.CardRepository;
-import com.bank.mapper.AccountMapper;
-import com.bank.representation.AccountRepresentation;
+import com.bank.representation.account.AccountRepresentationRequest;
+import com.bank.representation.account.AccountRepresentationResponse;
 import com.bank.util.Currency;
-import com.bank.domain.Money;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,83 +34,43 @@ import static java.util.Collections.max;
 public class AccountController {
     @Autowired
     public AccountRepository accountRepository;
-
     @Autowired
     public CardRepository cardRepository;
-
     @Autowired
     public AccountMapper accountMapper;
+    @Autowired
+    public AccountManager accountManager;
+
     @GetMapping("/accounts")
-    public ResponseEntity<?> findAllAccounts() {
-        return new ResponseEntity<>(accountMapper.toRepresentationList(accountRepository.findAll()),HttpStatus.OK);
+    public ResponseEntity<List<AccountRepresentationResponse>> findAllAccounts() {
+        return new ResponseEntity<>(accountManager.listAllAccounts(),HttpStatus.OK);
     }
 
     @GetMapping("/accounts/{id}")
-    ResponseEntity<?> findOneAccount(@PathVariable Integer id){
-        if(id==null){
-            return new ResponseEntity<>("id is null", HttpStatus.BAD_REQUEST);
-        }
-        if(!accountRepository.existsById(id)){
-            return new ResponseEntity<>("Account doesn't exist", HttpStatus.NOT_FOUND);
-        }
-        Account account = accountRepository.getReferenceById(id);
-        return new ResponseEntity<>(accountMapper.accountToRepresentation(account), HttpStatus.OK);
+    ResponseEntity<AccountRepresentationResponse> findOneAccount(@PathVariable @NotNull Integer id){
+        return new ResponseEntity<>(accountManager.findAccountById(id), HttpStatus.OK);
     }
 
     @PostMapping(value = "/accounts/new", produces = MediaType.APPLICATION_JSON_VALUE,consumes = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<?> createNewAccount(@RequestBody AccountRepresentation accountRepresentation) {
-        if(accountRepository.existsById(accountRepresentation.accountNumber)){
-            return new ResponseEntity<>("There is another account with that id", HttpStatus.BAD_REQUEST);
-        }
-        try {
-            Account account = accountMapper.accountRepresentationToModel(accountRepresentation);
-            accountRepository.save(account);
-            return new ResponseEntity<>("Account Created!", HttpStatus.CREATED);
-        } catch (Exception p) {
-            return new ResponseEntity<>("Something went wrong.Possible format error.", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    ResponseEntity<String> createNewAccount(@Valid @RequestBody AccountRepresentationRequest accountRepresentation) {
+        accountManager.createAccount(accountRepresentation);
+        return new ResponseEntity<>(SuccessMessages.ACCOUNT_CREATION, HttpStatus.CREATED);
     }
 
     @PutMapping(value = "/accounts/update/{id}", produces = MediaType.APPLICATION_JSON_VALUE,consumes = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<?> updateAccount(@PathVariable("id") Integer accountNumber,@RequestBody AccountRepresentation accountRepresentation) {
-        if(accountNumber ==null || accountRepresentation==null){return new ResponseEntity<>("Account or id is null", HttpStatus.BAD_REQUEST);}
-        if(!accountRepository.existsById(accountNumber)){
-            return new ResponseEntity<>("No Account with that id", HttpStatus.NOT_FOUND);
-        }
-        Account account1 = accountRepository.getReferenceById(accountNumber);
-        Account account = accountMapper.accountRepresentationToModel(accountRepresentation);
-        if (account1.getCardList() == null) {
-            account.setCardList(new ArrayList<>());
-        }
-        if (account1.getTransactionList() == null) {
-            account.setTransactionList(new ArrayList<>());
-        }
-        account1.getCardList().clear();
-        account1.getCardList().addAll(account.getCardList());
-
-        account1.getTransactionList().clear();
-        account1.getTransactionList().addAll(account.getTransactionList());
-
-        account1.setAccountNumber(account.getAccountNumber());
-        account1.setUser(account.getUser());
-        account1.setBalance(account.getBalance());
-
-        accountRepository.save(account1);
-
-        return new ResponseEntity<>("Account Updated!", HttpStatus.NO_CONTENT);
+    ResponseEntity<?> updateAccount(@PathVariable("id") @NotNull Integer accountNumber,@RequestBody @Valid AccountRepresentationRequest accountRepresentation) {
+        accountManager.updateAccount(accountNumber, accountRepresentation);
+        return new ResponseEntity<>(SuccessMessages.ACCOUNT_UPDATED, HttpStatus.NO_CONTENT);
     }
 
 
-    @DeleteMapping(value = "/accounts/delete/{id}", produces = MediaType.APPLICATION_JSON_VALUE,consumes = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<?> deleteAccount(@PathVariable("id") Integer accountNumber){
-        if(accountNumber==null){return new ResponseEntity<>("AccountNUmber is null", HttpStatus.BAD_REQUEST);}
-        if(!accountRepository.existsById(accountNumber)){
-            return new ResponseEntity<>("No Account with that id", HttpStatus.NOT_FOUND);
-        }
-        accountRepository.deleteById(accountNumber);
-        return new ResponseEntity<>("Account Deleted!", HttpStatus.NO_CONTENT);
+    @DeleteMapping(value = "/accounts/delete/{id}")
+    ResponseEntity<String> deleteAccount(@PathVariable("id") @NotNull Integer accountNumber){
+        accountManager.deleteAccount(accountNumber);
+        return new ResponseEntity<>(SuccessMessages.ACCOUNT_DELETED, HttpStatus.NO_CONTENT);
     }
 
+    //TODO Move this business logic to Card Manager
     @PostMapping(value="/accounts/addCard/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<?> addCardinList(@PathVariable("id") Integer accountNumber,
                                     @RequestParam(required = true) String pin,
