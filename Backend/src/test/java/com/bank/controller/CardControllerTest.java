@@ -2,7 +2,7 @@ package com.bank.controller;
 
 import com.bank.Fixture;
 import com.bank.Initialization;
-import com.bank.representation.CardRepresentation;
+import com.bank.representation.card.CardRepresentation;
 import io.restassured.common.mapper.TypeRef;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.Test;

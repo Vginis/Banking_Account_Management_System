@@ -4,6 +4,7 @@ import com.bank.Initialization;
 import com.bank.domain.Card;
 import com.bank.Fixture;
 import com.bank.mapper.CardMapper;
+import com.bank.representation.card.CardRepresentation;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;

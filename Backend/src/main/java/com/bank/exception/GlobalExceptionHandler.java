@@ -10,7 +10,14 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(value = EntityNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse handleException(EntityNotFoundException entityNotFoundException) {
+    public ErrorResponse handleEntityNotFoundException(EntityNotFoundException entityNotFoundException) {
         return new ErrorResponse(HttpStatus.NOT_FOUND.value(), entityNotFoundException.getMessage());
     }
+
+    @ExceptionHandler(value = IllegalArgumentException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleIllegalArgumentException(IllegalArgumentException illegalArgumentException) {
+        return new ErrorResponse(HttpStatus.BAD_REQUEST.value(), illegalArgumentException.getMessage());
+    }
+
 }

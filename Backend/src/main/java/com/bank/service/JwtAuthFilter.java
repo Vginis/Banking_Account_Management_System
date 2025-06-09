@@ -1,11 +1,15 @@
 package com.bank.service;
 
 
+import com.bank.exception.ErrorResponse;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -31,17 +35,30 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         String username = null;
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             token = authHeader.substring(7);
-            username = jwtService.extractUsername(token);
+            username = extractUsername(token, response);
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-            if (jwtService.validateToken(token, userDetails)) {
+            if (Boolean.TRUE.equals(jwtService.validateToken(token, userDetails))) {
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             }
         }
         filterChain.doFilter(request, response);
+    }
+
+    private String extractUsername(String token,HttpServletResponse response) throws IOException {
+        try{
+            return jwtService.extractUsername(token);
+        } catch (ExpiredJwtException e){
+            (response).setStatus(HttpStatus.UNAUTHORIZED.value());
+            (response).setContentType("application/json");
+            ErrorResponse err = new ErrorResponse(HttpStatus.UNAUTHORIZED.value(),  "Unauthorized");
+
+            new ObjectMapper().writeValue((response).getWriter(), err);
+            return "";
+        }
     }
 }

@@ -3,7 +3,7 @@ package com.bank.mapper;
 import com.bank.domain.Account;
 import com.bank.domain.Card;
 import com.bank.repository.AccountRepository;
-import com.bank.representation.CardRepresentation;
+import com.bank.representation.card.CardRepresentation;
 import jakarta.inject.Inject;
 import org.mapstruct.*;
 
@@ -21,15 +21,13 @@ public abstract class CardMapper {
     @Inject
     AccountRepository accountRepository;
 
-    @Mapping(target = "date", ignore = true)
+    @Mapping(target = "expirationDate", ignore = true)
     @Mapping(target = "activated", source = "card.activated")
     @Mapping(target = "accountNumber", source = "card.account.accountNumber")
     public abstract CardRepresentation cardToRepresentation(Card card);
 
     public abstract List<CardRepresentation> toRepresentationList(List<Card> cardList);
 
-    @Mapping(target = "activated", source = "activated")
-    @Mapping(target = "cardId", source = "cardId")
     @Mapping(target = "expirationDate", ignore = true)
     @Mapping(target = "account", ignore = true)
     public abstract Card toModel(CardRepresentation cardRepresentation);
@@ -38,12 +36,12 @@ public abstract class CardMapper {
     public void resolveCalendarToString(Card card, @MappingTarget CardRepresentation cardRepresentation) {
         LocalDateTime calendar = card.getExpirationDate();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        cardRepresentation.date = calendar.format(formatter);
+        cardRepresentation.expirationDate = calendar.format(formatter);
     }
 
     @AfterMapping
     public void resolveStringToCalendar(CardRepresentation cardRepresentation, @MappingTarget Card card){
-        String dateString = cardRepresentation.date;
+        String dateString = cardRepresentation.expirationDate;
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         LocalDateTime dateTime = LocalDateTime.parse(dateString, formatter);
