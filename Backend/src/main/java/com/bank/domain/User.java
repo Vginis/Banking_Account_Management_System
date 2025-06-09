@@ -1,5 +1,7 @@
 package com.bank.domain;
 
+import com.bank.representation.user.CreateUserRepresentation;
+import com.bank.representation.user.UpdateUserRepresentation;
 import jakarta.persistence.*;
 import org.apache.coyote.BadRequestException;
 import org.springframework.security.core.GrantedAuthority;
@@ -40,6 +42,16 @@ public class User implements UserDetails {
         this.email = email;
         this.address = address;
         this.accountList = accountList;
+        this.isAdmin = false;
+    }
+
+    public User(CreateUserRepresentation createUserRepresentation){
+        this.username = createUserRepresentation.username;
+        this.firstName = createUserRepresentation.firstName;
+        this.lastName = createUserRepresentation.lastName;
+        this.email = createUserRepresentation.email;
+        this.address = new Address(createUserRepresentation.address);
+        this.accountList = new ArrayList<>();
         this.isAdmin = false;
     }
 
@@ -129,6 +141,8 @@ public class User implements UserDetails {
 
 
 
+
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         if(isAdmin){
@@ -146,11 +160,11 @@ public class User implements UserDetails {
         this.password = password;
     }
 
-    public boolean isAdmin() {
+    public boolean getIsAdmin() {
         return isAdmin;
     }
 
-    public void setAdmin(boolean admin) {
+    public void setIsAdmin(boolean admin) {
         isAdmin = admin;
     }
 
@@ -165,5 +179,12 @@ public class User implements UserDetails {
         if (account == null){throw new BadRequestException("You gave null account");}
         if (!this.accountList.contains(account)){throw new BadRequestException("Account not for that user");}
         this.accountList.removeIf(acc -> Objects.equals(acc.getAccountNumber(), account.getAccountNumber()));
+    }
+
+    public void updateUserDetails(UpdateUserRepresentation updateUserRepresentation){
+        this.firstName = updateUserRepresentation.firstName;
+        this.lastName = updateUserRepresentation.lastName;
+        this.email = updateUserRepresentation.email;
+        this.address = new Address(updateUserRepresentation.address);
     }
 }

@@ -12,7 +12,5 @@ import java.util.Optional;
 @RequestScope
 public interface UserRepository extends JpaRepository<User,Integer> {
     @Query("SELECT c FROM User c WHERE c.username = :id")
-    Optional<User> findByName(@Param("id") String username);
-    @Query("SELECT c FROM User c WHERE c.username = :id")
-    User findByName1(@Param("id") String username);
+    Optional<User> findByUsername(@Param("id") String username);
 }

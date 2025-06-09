@@ -4,7 +4,7 @@ import com.bank.domain.Account;
 import com.bank.domain.Address;
 import com.bank.domain.User;
 import com.bank.repository.AccountRepository;
-import com.bank.representation.UserRepresentation;
+import com.bank.representation.user.UserRepresentation;
 import jakarta.inject.Inject;
 import org.apache.coyote.BadRequestException;
 import org.mapstruct.*;
@@ -26,22 +26,12 @@ public abstract class UserMapper {
     @Autowired
     private PasswordEncoder encoder;
 
-    @Mapping(source = "userId", target = "userId")
-    @Mapping(source = "firstName", target = "firstName")
-    @Mapping(source = "email", target = "email")
-    @Mapping(source = "lastName", target = "lastName")
-    @Mapping(source = "username", target="username")
     @Mapping(target = "address", ignore = true)
     @Mapping(target = "accountList", expression = "java(user.getAccountList().stream().map(com.bank.domain.Account::getAccountNumber).collect(Collectors.toList()))")
     public abstract UserRepresentation userToRepresentation(User user);
 
     public abstract List<UserRepresentation> toRepresentationList(List<User> userList);
 
-    @Mapping(source = "userId", target = "userId")
-    @Mapping(source = "firstName", target = "firstName")
-    @Mapping(source = "email", target = "email")
-    @Mapping(source = "username", target="username")
-    @Mapping(source = "lastName", target = "lastName")
     @Mapping(target = "address", ignore = true)
     @Mapping(target = "accountList",ignore = true)
     public abstract User userRepresentationToModel(UserRepresentation userRepresentation) throws BadRequestException;
@@ -83,7 +73,4 @@ public abstract class UserMapper {
     public void resolvePassword(@MappingTarget User user) {
         user.setPassword(encoder.encode("temporary123@T"));
     }
-
-    @AfterMapping
-    public void resolveIsAdmin(@MappingTarget User user){user.setAdmin(false);}
 }

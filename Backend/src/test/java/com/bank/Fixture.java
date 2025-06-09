@@ -2,7 +2,7 @@ package com.bank;
 
 import com.bank.representation.card.CardRepresentation;
 import com.bank.representation.DepositRepresentation;
-import com.bank.representation.UserRepresentation;
+import com.bank.representation.user.UserRepresentation;
 import com.bank.representation.WithdrawalRepresentation;
 import com.bank.representation.account.AccountRepresentationResponse;
 

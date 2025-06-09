@@ -1,7 +1,7 @@
 package com.bank.controller;
 
 import com.bank.Initialization;
-import com.bank.representation.UserRepresentation;
+import com.bank.representation.user.UserRepresentation;
 import io.restassured.common.mapper.TypeRef;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.Test;
@@ -13,7 +13,6 @@ import java.util.List;
 
 import static com.bank.util.Urls.USER_URL;
 import static io.restassured.RestAssured.given;
-import static io.restassured.RestAssured.when;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest

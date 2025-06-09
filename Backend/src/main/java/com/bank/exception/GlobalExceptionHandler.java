@@ -20,4 +20,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ErrorResponse(HttpStatus.BAD_REQUEST.value(), illegalArgumentException.getMessage());
     }
 
+    @ExceptionHandler(value = UnauthorizedException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ErrorResponse handleUnauthorizedException(UnauthorizedException unauthorizedException) {
+        return new ErrorResponse(HttpStatus.UNAUTHORIZED.value(), unauthorizedException.getMessage());
+    }
 }

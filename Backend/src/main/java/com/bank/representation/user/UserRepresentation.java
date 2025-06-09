@@ -1,4 +1,4 @@
-package com.bank.representation;
+package com.bank.representation.user;
 
 import org.springframework.aot.hint.annotation.RegisterReflectionForBinding;
 
@@ -14,4 +14,6 @@ public class UserRepresentation {
     public String address;
     public List<Integer> accountList;
     public boolean isAdmin;
+
+    //TODO Change List<Integer> accountList to List<AccountRepresentation>
 }

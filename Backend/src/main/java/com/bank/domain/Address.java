@@ -10,7 +10,18 @@ public class Address {
     @Column(name="number")
     private String number;
     @Column(name="zip_code")
-    private String ZipCode;
+    private String zipCode;
+
+    public Address() {
+    }
+
+    public Address(String addressString) {
+        String[] wordList = new String[3];
+        wordList = addressString.split(" ");
+        this.street = wordList[0];
+        this.number = wordList[1];
+        this.zipCode = wordList[2];
+    }
 
     public String getStreet() {
         return street;
@@ -29,11 +40,11 @@ public class Address {
     }
 
     public String getZipCode() {
-        return ZipCode;
+        return zipCode;
     }
 
     public void setZipCode(String zipCode) {
-        ZipCode = zipCode;
+        this.zipCode = zipCode;
     }
 }
 
