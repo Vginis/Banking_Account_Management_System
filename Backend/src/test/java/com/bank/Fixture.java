@@ -1,7 +1,10 @@
 package com.bank;
 
-import com.bank.domain.Deposit;
-import com.bank.representation.*;
+import com.bank.representation.card.CardRepresentation;
+import com.bank.representation.DepositRepresentation;
+import com.bank.representation.UserRepresentation;
+import com.bank.representation.WithdrawalRepresentation;
+import com.bank.representation.account.AccountRepresentationResponse;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -14,8 +17,8 @@ public class Fixture extends Initialization{
         CardRepresentation cardRepresentation = new CardRepresentation();
         cardRepresentation.cardId = 123456789012L;
         cardRepresentation.pin = "0000";
-        cardRepresentation.date = "2027-11-26 00:00:00";
-        cardRepresentation.activated = "true";
+        cardRepresentation.expirationDate = "2027-11-26 00:00:00";
+        cardRepresentation.activated = true;
         cardRepresentation.accountNumber = 1;
         return cardRepresentation;
     }
@@ -24,8 +27,8 @@ public class Fixture extends Initialization{
         CardRepresentation cardRepresentation = new CardRepresentation();
         cardRepresentation.cardId = 123456789019L;
         cardRepresentation.pin = "0000";
-        cardRepresentation.date = "2027-11-26 00:00:00";
-        cardRepresentation.activated = "true";
+        cardRepresentation.expirationDate = "2027-11-26 00:00:00";
+        cardRepresentation.activated = true;
         cardRepresentation.accountNumber = 1;
         return cardRepresentation;
     }
@@ -34,14 +37,14 @@ public class Fixture extends Initialization{
         CardRepresentation cardRepresentation = new CardRepresentation();
         cardRepresentation.cardId = 123456789019L;
         cardRepresentation.pin = "0000";
-        cardRepresentation.date = "2027-11-26 00:00:00";
-        cardRepresentation.activated = "true";
+        cardRepresentation.expirationDate = "2027-11-26 00:00:00";
+        cardRepresentation.activated = true;
         cardRepresentation.accountNumber = 1;
         return cardRepresentation;
     }
 
-    public AccountRepresentation createAccountRepresentation(){
-        AccountRepresentation accountRepresentation = new AccountRepresentation();
+    public AccountRepresentationResponse createAccountRepresentation(){
+        AccountRepresentationResponse accountRepresentation = new AccountRepresentationResponse();
         accountRepresentation.accountNumber = 1;
         accountRepresentation.balance = 45;
         accountRepresentation.userId = 1;
@@ -53,8 +56,8 @@ public class Fixture extends Initialization{
         return accountRepresentation;
     }
 
-    public AccountRepresentation createAccountRepresentation2(){
-        AccountRepresentation accountRepresentation = new AccountRepresentation();
+    public AccountRepresentationResponse createAccountRepresentation2(){
+        AccountRepresentationResponse accountRepresentation = new AccountRepresentationResponse();
         accountRepresentation.accountNumber = 7;
         accountRepresentation.balance = 45;
         accountRepresentation.userId = 1;
