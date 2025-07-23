@@ -1,7 +1,7 @@
 # Banking Account Management System
 
 ## Overview
-The Banking Account Management System is a REST API developed using Spring Boot and designed to facilitate banking operations.
+The Banking Account Management System is a Web Application developed using Spring Boot and React, designed to facilitate banking operations.
 This API enables users to manage their bank accounts with functionalities such as transferring funds, making deposits and withdrawing
 money. The system employs MySQL for data storage.
 
@@ -16,6 +16,7 @@ money. The system employs MySQL for data storage.
 
 * Java 21
 * Spring Boot(3.3.0)
+* React(18.2.0)
 * MySQL
 * JUnit
 * Rest-Assured Framework
@@ -24,39 +25,46 @@ money. The system employs MySQL for data storage.
 # Testing and Quality Assurance:
 The Unit Tests provide over 85% of code coverage
 
+# Security Features:
+* JWT Authentication
+* Password hashing
+
 # API Description
 ## Account Controller
 * GET /accounts: Returns all Accounts
 * GET /accounts/{id}: Returns account with specific Id
-* POST /accounts/new: Produces a new Account
-* POST /accounts/addCard/{id}: Adds a new Card Entity in the Account's cardList
-* PUT /accounts/update/{id}: Updates Account with specific Id
-* PUT /accounts/{de_activate}/card/{id}: Activates/Deactivates a card from Account's cardList
+* POST /accounts/new: Creates new Account
+* PUT /accounts/update/{id}: Updates details of specific Account
 * PUT /accounts/transfer/{id}: Transfers money from one Account to another
 * DELETE /accounts/delete/{id}: Deletes Account with specific Id
-* DELETE /accounts/deleteCard/{id}: Deletes a Card Entity from the Account's cardList
 ## Card Controller
 * GET /cards: Returns all Cards
 * GET /cards/{id}: Returns Card with specific Id
-* POST /cards/new: Produces a new Card
-* PUT /cards/update/{id}: Updates Card with specific Id
+* POST /cards/new: Creates new Card
+* PUT /cards/update/{id}: Updates details of specific Card
 * DELETE /cards/delete/{id}: Deletes Card with specific Id
 ## Deposit Controller
 * GET /deposits: Returns all Deposits
 * GET /deposits/{id}: Returns Deposit with specific Id
-* POST /deposits/new: Produces a new Deposit
+* GET /deposits/account/{accountNumber}: Returns Deposits of specific account
+* POST /deposits: Creates new Deposit
 * PUT /deposits/update/{id}: Updates Deposit with specific Id
 * DELETE /deposits/delete/{id}: Deletes Deposit with specific Id
 
 ## Withdrawal Controller
 * GET /withdrawals: Returns all Withdrawals
 * GET /withdrawals/{id}: Returns Withdrawal with specific Id
-* POST /withdrawals/new: Produces a new Withdrawal
+* GET /withdrawals/account/{accountNumber}: Returns Withdrawals of specific account
+* POST /withdrawals/new: Creates new Withdrawal
 * PUT /withdrawals/update/{id}: Updates Withdrawal with specific Id
 * DELETE /withdrawals/delete/{id}: Deletes Withdrawal with specific Id
 ## User Controller
 * GET /users: Returns all Users
 * GET /users/{id}: Returns User with specific Id
-* POST /users/new: Produces a new User
+* GET /users/name/{username}: Returns User with specific username
+* POST /users/new: Creates new User
 * PUT /users/update/{id}: Updates User with specific Id
+* PUT /users/changePassword: Updates current user's password
 * DELETE /users/delete/{id}: Deletes User with specific Id
+## Authentication Controller
+* POST /auth/login: Login with username/password credentials 
