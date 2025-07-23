@@ -55,8 +55,8 @@ function App() {
         <Route path="/balance" element={<PrivateRoute><Balance token={token} userData={userData} accounts={accounts}/></PrivateRoute>} />
         <Route path="/transferFunds" element={<PrivateRoute><Transfer currentUser={username} token={token} accounts={accounts}/></PrivateRoute>} />
         <Route path="/changePassword" element={<PrivateRoute><ChangePassword userData={userData} token={token}/></PrivateRoute>} />
-        <Route path="/deposit" element={<Deposit currentUser={username} token={token} accounts={accounts}/>} />
-        <Route path="/withdrawal" element={<Withdrawal currentUser={username} token={token} accounts={accounts}/>} />
+        <Route path="/deposit" element={<Deposit token={token} accounts={accounts}/>} />
+        <Route path="/withdrawal" element={<Withdrawal token={token} accounts={accounts}/>} />
         <Route path="/transactions" element={<TransactionHistory currentUser={username} token={token} accounts={accounts}/>} />
         <Route path="*" element={<Navigate to="/login" />} />
       </Routes>
