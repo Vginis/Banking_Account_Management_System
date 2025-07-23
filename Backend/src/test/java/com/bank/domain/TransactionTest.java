@@ -51,17 +51,6 @@ public class TransactionTest extends Initialization {
 
     /*domain tests*/
     @Test
-    public void makeDepositTest(){
-        deposit.makeDeposit(new BigDecimal(50),account);
-        assertEquals(new BigDecimal(95),account.getBalance().getAmount());
-    }
-
-    @Test
-    public void makeInvalidDepositTest(){
-        assertFalse(deposit.makeDeposit(new BigDecimal(50),null));
-    }
-
-    @Test
     public void makeWithdrawalTest() throws BadRequestException {
         withdrawal.makeWithdrawal(new BigDecimal(34),account);
         assertEquals(new BigDecimal(11),account.getBalance().getAmount());

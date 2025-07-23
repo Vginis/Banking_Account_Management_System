@@ -2,7 +2,6 @@ package com.bank.domain;
 
 import jakarta.persistence.*;
 
-
 import java.time.LocalDateTime;
 
 @Entity
@@ -26,6 +25,12 @@ public class Transaction {
 
     public Transaction(Integer transactionId, LocalDateTime date, Money amount, Account account) {
         this.transactionId = transactionId;
+        this.date = date;
+        this.amount = amount;
+        this.account = account;
+    }
+
+    public Transaction(LocalDateTime date, Money amount, Account account) {
         this.date = date;
         this.amount = amount;
         this.account = account;
