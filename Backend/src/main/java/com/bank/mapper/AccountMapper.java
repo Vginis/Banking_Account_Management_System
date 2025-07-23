@@ -3,8 +3,6 @@ package com.bank.mapper;
 import com.bank.domain.Account;
 import com.bank.domain.Money;
 import com.bank.domain.User;
-import com.bank.repository.CardRepository;
-import com.bank.repository.TransactionRepository;
 import com.bank.repository.UserRepository;
 import com.bank.representation.account.AccountRepresentationRequest;
 import com.bank.representation.account.AccountRepresentationResponse;
@@ -23,11 +21,6 @@ import java.util.stream.Collectors;
 public abstract class AccountMapper {
     @Inject
     UserRepository userRepository;
-    @Inject
-    CardRepository cardRepository;
-    @Inject
-    TransactionRepository transactionRepository;
-
     @Mapping(source = "user.userId", target = "userId")
     @Mapping(source = "balance.amount", target = "balance")
     @Mapping(target = "cardList", expression = "java(account.getCardList().stream().map(com.bank.domain.Card::getCardId).collect(Collectors.toList()))")

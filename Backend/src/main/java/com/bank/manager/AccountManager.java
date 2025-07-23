@@ -8,7 +8,6 @@ import com.bank.exception.EntityNotFoundException;
 import com.bank.exception.IllegalArgumentException;
 import com.bank.mapper.AccountMapper;
 import com.bank.repository.AccountRepository;
-import com.bank.repository.CardRepository;
 import com.bank.repository.UserRepository;
 import com.bank.representation.account.AccountRepresentationRequest;
 import com.bank.representation.account.AccountRepresentationResponse;
@@ -26,9 +25,6 @@ import java.util.Optional;
 public class AccountManager {
     @Autowired
     public AccountRepository accountRepository;
-
-    @Autowired
-    public CardRepository cardRepository;
 
     @Autowired
     public AccountMapper accountMapper;

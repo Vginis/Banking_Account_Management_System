@@ -150,4 +150,12 @@ public class Account {
         this.setBalance(new Money(initial1.subtract(money.getAmount()), Currency.EUR));
         destinationAccount.setBalance(new Money(initial2.add(money.getAmount()), Currency.EUR));
     }
+
+    public void withDrawMoney(Long amount){
+        this.balance.setAmount(this.balance.getAmount().subtract(BigDecimal.valueOf(amount)));
+    }
+
+    public void depositMoney(Long amount){
+        this.balance.setAmount(this.balance.getAmount().add(BigDecimal.valueOf(amount)));
+    }
 }
