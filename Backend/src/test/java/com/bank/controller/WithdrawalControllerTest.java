@@ -3,7 +3,7 @@
 //import com.bank.Fixture;
 //import com.bank.Initialization;
 //import com.bank.representation.account.AccountRepresentation;
-//import com.bank.representation.WithdrawalRepresentation;
+//import com.bank.representation.withdrawal.WithdrawalRepresentation;
 //import io.restassured.common.mapper.TypeRef;
 //import io.restassured.http.ContentType;
 //import org.junit.jupiter.api.Test;

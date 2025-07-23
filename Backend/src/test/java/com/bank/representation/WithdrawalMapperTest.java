@@ -3,6 +3,7 @@ package com.bank.representation;
 import com.bank.Initialization;
 import com.bank.domain.Transaction;
 import com.bank.mapper.WithdrawalMapper;
+import com.bank.representation.withdrawal.WithdrawalRepresentation;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;

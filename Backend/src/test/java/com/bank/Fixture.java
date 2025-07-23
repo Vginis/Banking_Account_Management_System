@@ -1,9 +1,9 @@
 package com.bank;
 
 import com.bank.representation.card.CardRepresentation;
-import com.bank.representation.DepositRepresentation;
+import com.bank.representation.deposit.DepositRepresentation;
 import com.bank.representation.user.UserRepresentation;
-import com.bank.representation.WithdrawalRepresentation;
+import com.bank.representation.withdrawal.WithdrawalRepresentation;
 import com.bank.representation.account.AccountRepresentationResponse;
 
 import java.math.BigDecimal;

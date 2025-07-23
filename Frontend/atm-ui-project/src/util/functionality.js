@@ -1,10 +1,10 @@
-import Enpoints from './enums';
+import Endpoints from './enums';
 
 export async function getBalance(){
     let amount = 0;
     
     try {
-        const userResponse = await fetch(Enpoints.USER, {
+        const userResponse = await fetch(Endpoints.USER, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -18,7 +18,7 @@ export async function getBalance(){
         const userData = await userResponse.json();
         await Promise.all(userData.accountList.map(async (element) => {
             try {
-                const accountResponse = await fetch(`${Enpoints.ACCOUNTS}/${element}`);
+                const accountResponse = await fetch(`${Endpoints.ACCOUNTS}/${element}`);
                 if (!accountResponse.ok) {
                     throw new Error('Bank Account API response was not ok');
                 }
@@ -37,14 +37,20 @@ export async function getBalance(){
     }
 }
 
-export async function makeADeposit(account,euros,token){
+export async function makeDeposit(account,amount,token){
     try {
-        const response = await fetch(Enpoints.DEPOSITS+`/make/${account}?amount=${euros}`,{method:'PUT', 
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            }
-        });
+        const response = await fetch(Endpoints.DEPOSITS,
+            {
+                method:'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    amount: amount,
+                    account: account
+                })
+            });
         if (!response.ok) {
         throw new Error('API response was not ok ' + response.statusText);
         }
@@ -54,16 +60,23 @@ export async function makeADeposit(account,euros,token){
     }
 }
 
-export async function makeAWithdrawal(account,euros,token){
+export async function makeWithdrawal(account,amount,token){
     try {
-        const response = await fetch(Enpoints.WITHDRAWALS+`/make/${account}?amount=${euros}`,{method:'PUT', 
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            }
+        const response = await fetch(Endpoints.WITHDRAWALS,
+            {
+                method:'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    amount: amount,
+                    account: account
+                })
         });
+        
         if (!response.ok) {
-        throw new Error('API response was not ok ' + response.statusText);
+            throw new Error('API response was not ok ' + response.statusText);
         }
         console.log('Resource updated:');
     } catch (e) {

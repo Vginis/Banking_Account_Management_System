@@ -1,11 +1,11 @@
-package com.bank.representation;
+package com.bank.representation.withdrawal;
 
 import org.springframework.aot.hint.annotation.RegisterReflectionForBinding;
 
 import java.math.BigDecimal;
 
 @RegisterReflectionForBinding
-public class DepositRepresentation {
+public class WithdrawalRepresentation {
     public Integer transactionId;
     public String date;
     public BigDecimal amount;

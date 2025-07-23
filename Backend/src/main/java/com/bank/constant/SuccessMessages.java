@@ -13,5 +13,13 @@ public class SuccessMessages {
     public static String USER_UPDATED = "user_updated";
     public static String USER_DELETED = "user_deleted";
 
+    public static String DEPOSIT_CREATED = "deposit_created";
+    public static String DEPOSIT_UPDATED = "deposit_updated";
+    public static String DEPOSIT_DELETED = "deposit_deleted";
+
+    public static String WITHDRAWAL_CREATED = "withdrawal_created";
+    public static String WITHDRAWAL_UPDATED = "withdrawal_updated";
+    public static String WITHDRAWAL_DELETED = "withdrawal_deleted";
+
     public static String TRANSFER_MADE_SUCCESSFULLY = "transfer_made_successfully";
 }

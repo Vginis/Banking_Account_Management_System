@@ -3,7 +3,7 @@ package com.bank.mapper;
 import com.bank.domain.Account;
 import com.bank.domain.Deposit;
 import com.bank.repository.AccountRepository;
-import com.bank.representation.DepositRepresentation;
+import com.bank.representation.deposit.DepositRepresentation;
 import com.bank.util.Currency;
 import com.bank.domain.Money;
 import jakarta.inject.Inject;

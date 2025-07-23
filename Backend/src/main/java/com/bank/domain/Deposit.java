@@ -1,8 +1,10 @@
 package com.bank.domain;
 
+import com.bank.representation.deposit.DepositCreateRepresentation;
 import com.bank.util.Currency;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -16,16 +18,10 @@ public class Deposit extends Transaction{
     public Deposit() {
     }
 
-    public boolean makeDeposit(BigDecimal amount, Account account){
-        if (account==null || amount == null){return false;}
-        if (amount.compareTo(new BigDecimal(0))<= 0){
-            return false;
-        }
-        BigDecimal currentAmount = account.getBalance().getAmount();
-        BigDecimal newAmount = currentAmount.add(amount);
-        account.setBalance(new Money(newAmount, Currency.EUR));
-        account.getTransactionList().add(this);
-        return true;
+    public void updateDepositDetails(DepositCreateRepresentation depositCreateRepresentation,Account account){
+        this.setAccount(account);
+        this.setAmount(new Money(BigDecimal.valueOf(depositCreateRepresentation.amount), Currency.EUR));
+        this.setDate(LocalDateTime.now());
     }
 }
 

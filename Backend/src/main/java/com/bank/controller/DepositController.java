@@ -1,133 +1,56 @@
 package com.bank.controller;
 
-import com.bank.domain.Account;
-import com.bank.domain.Deposit;
-import com.bank.repository.AccountRepository;
-import com.bank.repository.DepositRepository;
-import com.bank.mapper.DepositMapper;
-import com.bank.representation.DepositRepresentation;
-import com.bank.domain.Money;
+import com.bank.constant.SuccessMessages;
+import com.bank.manager.DepositManager;
+import com.bank.representation.deposit.DepositCreateRepresentation;
+import com.bank.representation.deposit.DepositRepresentation;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
 import java.text.ParseException;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
-
-import static com.bank.util.Currency.EUR;
-import static java.util.Collections.max;
 
 
 @RestController
 public class DepositController {
     @Autowired
-    public DepositRepository depositRepository;
-    @Autowired
-    public AccountRepository accountRepository;
-    @Autowired
-    public DepositMapper depositMapper;
+    DepositManager depositManager;
+
     @GetMapping("/deposits")
-    public ResponseEntity<?> findAllDeposits() {
-        return new ResponseEntity<>(depositMapper.toRepresentationList(depositRepository.findAll()), HttpStatus.OK);
+    public ResponseEntity<List<DepositRepresentation>> findAllDeposits() {
+        return new ResponseEntity<>(depositManager.findAllDeposits(), HttpStatus.OK);
     }
 
     @GetMapping("/deposits/{id}")
-    ResponseEntity<?> findOneDeposit(@PathVariable Integer id){
-        if(id==null){
-            return new ResponseEntity<>("id is null", HttpStatus.BAD_REQUEST);
-        }
-        if(!depositRepository.existsById(id)){
-            return new ResponseEntity<>("Deposit doesn't exist", HttpStatus.NOT_FOUND);
-        }
-        Deposit deposit = depositRepository.getReferenceById(id);
-        return new ResponseEntity<>(depositMapper.toRepresentation(deposit), HttpStatus.OK);
+    ResponseEntity<DepositRepresentation> findOneDeposit(@PathVariable @NotNull Integer id){
+        return new ResponseEntity<>(depositManager.findDepositById(id), HttpStatus.OK);
     }
 
-    @GetMapping("deposits/account/{id}")
-    ResponseEntity<?> findDepositsByAccount(@PathVariable Integer id){
-        if(id==null){
-            return new ResponseEntity<>("id is null", HttpStatus.BAD_REQUEST);
-        }
-        List<Deposit> deposits = depositRepository.findDepositByAccountNumber(id);
-        if(deposits==null){
-            return new ResponseEntity<>("This account doesn't have deposits", HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(depositMapper.toRepresentationList(deposits), HttpStatus.OK);
+    @GetMapping("deposits/account/{accountNumber}")
+    ResponseEntity<List<DepositRepresentation>> findDepositsByAccount(@PathVariable @NotNull Integer accountNumber){
+        return new ResponseEntity<>(depositManager.findDepositsByAccount(accountNumber), HttpStatus.OK);
     }
 
-    @PostMapping(value = "/deposits/new", produces = MediaType.APPLICATION_JSON_VALUE,consumes = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<?> createNewDeposit(@RequestBody DepositRepresentation depositRepresentation) {
-        if(depositRepository.existsById(depositRepresentation.transactionId)){
-            return new ResponseEntity<>("There is another deposit with that id", HttpStatus.BAD_REQUEST);
-        }
-        if(depositRepresentation.amount.compareTo(new BigDecimal(0))<=0){
-            return new ResponseEntity<>("Amount less than 0", HttpStatus.BAD_REQUEST);
-        }
-        try {
-            Deposit deposit = depositMapper.toModel(depositRepresentation);
-            depositRepository.save(deposit);
-            return new ResponseEntity<>("Deposit Created!", HttpStatus.CREATED);
-        } catch (Exception p) {
-            return new ResponseEntity<>("Something went wrong.Possible format error.", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    @PostMapping(value = "/deposits", produces = MediaType.APPLICATION_JSON_VALUE,consumes = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<String> createNewDeposit(@RequestBody @Valid DepositCreateRepresentation depositCreateRepresentation) {
+        depositManager.createDeposit(depositCreateRepresentation);
+        return new ResponseEntity<>(SuccessMessages.DEPOSIT_CREATED, HttpStatus.CREATED);
     }
 
     @PutMapping(value = "/deposits/update/{id}", produces = MediaType.APPLICATION_JSON_VALUE,consumes = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<?> updateDeposit(@PathVariable("id") Integer transactionId,@RequestBody DepositRepresentation depositRepresentation) throws ParseException {
-        if(transactionId ==null || depositRepresentation==null){return new ResponseEntity<>("Deposit or id is null", HttpStatus.BAD_REQUEST);}
-        if(!depositRepository.existsById(transactionId)){
-            return new ResponseEntity<>("No Deposit with that id", HttpStatus.NOT_FOUND);
-        }
-        if(depositRepresentation.amount.compareTo(new BigDecimal(0))<=0 || depositRepresentation.amount.compareTo(new BigDecimal(1000))>=0){
-            return new ResponseEntity<>("Amount is less than 0", HttpStatus.BAD_REQUEST);
-        }
-        Deposit deposit1 = depositRepository.getReferenceById(transactionId);
-        Deposit deposit = depositMapper.toModel(depositRepresentation);
-
-        deposit1.setDate(deposit.getDate());
-        deposit1.setAccount(deposit.getAccount());
-        deposit1.setAmount(deposit.getAmount());
-        deposit1.setTransactionId(deposit.getTransactionId());
-
-        depositRepository.save(deposit1);
-
-        return new ResponseEntity<>("Deposit Updated!", HttpStatus.NO_CONTENT);
+    ResponseEntity<String> updateDeposit(@PathVariable("id") Integer transactionId,@RequestBody @Valid DepositCreateRepresentation depositRepresentation) throws ParseException {
+        depositManager.updateDeposit(transactionId, depositRepresentation);
+        return new ResponseEntity<>(SuccessMessages.DEPOSIT_UPDATED, HttpStatus.NO_CONTENT);
     }
 
     @DeleteMapping(value = "/deposits/delete/{id}", produces = MediaType.APPLICATION_JSON_VALUE,consumes = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<?> deleteDeposit(@PathVariable("id") Integer transactionId){
-        if(transactionId==null){return new ResponseEntity<>("transactionId is null", HttpStatus.BAD_REQUEST);}
-        if(!depositRepository.existsById(transactionId)){
-            return new ResponseEntity<>("No Deposit with that id", HttpStatus.NOT_FOUND);
-        }
-        depositRepository.deleteById(transactionId);
-        return new ResponseEntity<>("Deposit Deleted!", HttpStatus.NO_CONTENT);
-    }
-
-    @PutMapping(value = "/deposits/make/{account}", produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<?> makeDeposit(@PathVariable("account") Integer account,
-                                  @RequestParam("amount") BigDecimal amount){
-        if(account==null){return new ResponseEntity<>("account is null", HttpStatus.BAD_REQUEST);}
-        if(!accountRepository.existsById(account)){
-            return new ResponseEntity<>("No Account with that id", HttpStatus.NOT_FOUND);
-        }
-        if(amount.compareTo(new BigDecimal(0))<=0){
-            return new ResponseEntity<>("Amount is less than 0", HttpStatus.BAD_REQUEST);
-        }
-        Account account1 = accountRepository.getReferenceById(account);
-        List<Integer> intList = new ArrayList<>();
-        for (Deposit d: depositRepository.findAll()){
-            intList.add(d.getTransactionId());
-        }
-        Deposit deposit = new Deposit( max(intList)+1,LocalDateTime.now(),new Money(amount,EUR),account1);
-
-        deposit.makeDeposit(deposit.getAmount().getAmount(), account1);
-        accountRepository.save(account1);
-        return new ResponseEntity<>("Deposit Made!", HttpStatus.NO_CONTENT);
+    ResponseEntity<String> deleteDeposit(@PathVariable("id") Integer transactionId){
+        depositManager.deleteDeposit(transactionId);
+        return new ResponseEntity<>(SuccessMessages.DEPOSIT_DELETED, HttpStatus.NO_CONTENT);
     }
 }
