@@ -22,11 +22,11 @@ import java.util.Optional;
 @Transactional
 public class CardManager {
     @Autowired
-    CardRepository cardRepository;
+    public CardRepository cardRepository;
     @Autowired
-    CardMapper cardMapper;
+    public CardMapper cardMapper;
     @Autowired
-    AccountRepository accountRepository;
+    public AccountRepository accountRepository;
 
     public List<CardRepresentation> findAllCards(){
         return cardMapper.toRepresentationList(cardRepository.findAll());
